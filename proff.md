@@ -20,10 +20,37 @@ A fake web/software console for executing commands
 - donate
 - security
   - password for remote
+- configure
+  - port
+  - username: password
 
 ## Design
 
-## Implementation
+### design core
+
+#### D1
+
+- execute commands at backend
+  - name + number
+  - upload insert line
+  - upload button
+- record log for each action
+  - done or err
+
+#### D2
+
+- cron scheduler
+- D1
+
+#### D3
+
+- arrange commands
+- D1
+
+### http support
+
+- http
+  - port: 6121
 
 ## Libraries
 
