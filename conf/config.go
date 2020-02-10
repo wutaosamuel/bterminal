@@ -71,7 +71,11 @@ func (c *Config) GetPassword() string { return c.password }
 
 // Load load config file
 func (c *Config) Load(path string) error {
-	config := NewConfig()
+	type JConfig struct {
+		port     string
+		password string
+	}
+	config := &JConfig{}
 	if c.path == "" && path == "" {
 		path = "config.json"
 	}
@@ -87,8 +91,37 @@ func (c *Config) Load(path string) error {
 	if err != nil {
 		return utils.Errs("Config Error: Cannot decode json", err)
 	}
-	c.port = config.password
+	c.port = config.port
 	c.password = config.password
+	return nil
+}
+
+// UpdateJson update json
+func (c *Config) UpdateJSON() error {
+	type JConfig struct {
+		port     string
+		password string
+	}
+	var buffer []byte
+	config := &JConfig{}
+	buffer, err := ioutil.ReadFile(c.path)
+	if err != nil {
+		return utils.Errs("Config Error: Cannot read file.", err)
+	}
+	err = json.Unmarshal(buffer, &config)
+	if config.port != c.port || config.password != c.password {
+		config.port = c.port
+		config.password = c.password
+		buffer, err = json.Marshal(&config)
+		if err != nil {
+			return utils.Errs("Config Error: Cannot marshal file.", err)
+		}
+		err = ioutil.WriteFile(c.path, buffer, 0644)
+		if err != nil {
+			return utils.Errs("Config Error: Cannot write file.", err)
+		}
+	}
+
 	return nil
 }
 
@@ -97,9 +130,13 @@ func (c *Config) ChangePassword(current string, new1 string, new2 string) error 
 	if new1 != new2 {
 		return errors.New("password not match")
 	}
+	// FIXME: no password
 	if current != c.password {
 		return errors.New("password not correct")
 	}
 	c.password = new1
+	if err := c.UpdateJSON(); err != nil {
+		return err
+	}
 	return nil
 }
