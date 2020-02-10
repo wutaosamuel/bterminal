@@ -13,7 +13,7 @@ A fake web/software console for executing commands
 - log files && display
 - cron scheduler
 - sequential execution on commands that will be executed
-  - graphical arrangement
+  - `graphical arrangement`
 
 ### Others
 
@@ -30,6 +30,9 @@ A fake web/software console for executing commands
 
 #### D1
 
+- load config
+  - port
+  - password
 - execute commands at backend
   - name + number
   - upload insert line
@@ -40,6 +43,8 @@ A fake web/software console for executing commands
 #### D2
 
 - cron scheduler
+  - start
+  - stop
 - D1
 
 #### D3
@@ -53,6 +58,8 @@ A fake web/software console for executing commands
   - port: 6121
 
 ## Libraries
+
+- github.com/robfig/cron
 
 ## Import Structure
 
