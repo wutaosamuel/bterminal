@@ -64,9 +64,6 @@ func (c *Config) GetPath() string { return c.path }
 // GetPort get port
 func (c *Config) GetPort() string { return c.port }
 
-// GetPassword get password
-func (c *Config) GetPassword() string { return c.password }
-
 /////////////////// main ///////////////////
 
 // Load load config file
@@ -96,7 +93,7 @@ func (c *Config) Load(path string) error {
 	return nil
 }
 
-// UpdateJson update json
+// UpdateJSON update json
 func (c *Config) UpdateJSON() error {
 	type JConfig struct {
 		port     string
