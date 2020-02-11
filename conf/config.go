@@ -15,6 +15,7 @@ type Config struct {
 	path     string
 	port     string
 	password string
+	LogPath  string
 }
 
 // NewConfig is a constructor
@@ -71,6 +72,7 @@ func (c *Config) Load(path string) error {
 	type JConfig struct {
 		port     string
 		password string
+		logPath  string
 	}
 	config := &JConfig{}
 	if c.path == "" && path == "" {
@@ -90,6 +92,7 @@ func (c *Config) Load(path string) error {
 	}
 	c.port = config.port
 	c.password = config.password
+	c.LogPath = config.logPath
 	return nil
 }
 
@@ -98,6 +101,7 @@ func (c *Config) UpdateJSON() error {
 	type JConfig struct {
 		port     string
 		password string
+		logPath  string
 	}
 	var buffer []byte
 	config := &JConfig{}
@@ -109,6 +113,7 @@ func (c *Config) UpdateJSON() error {
 	if config.port != c.port || config.password != c.password {
 		config.port = c.port
 		config.password = c.password
+		config.logPath = c.LogPath
 		buffer, err = json.Marshal(&config)
 		if err != nil {
 			return utils.Errs("Config Error: Cannot marshal file.", err)

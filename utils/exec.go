@@ -10,6 +10,9 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// TODO: recover jobs
+// TODO: cycle job is not work on done
+
 // Exec type for do exec
 type Exec struct {
 	Name    string // the name of jobs
@@ -18,7 +21,7 @@ type Exec struct {
 
 	Cron   *cron.Cron // does job need to schedule
 	time   string     // schedule time of job
-	CronOP CronOP      // cron operation for job
+	CronOP CronOP     // cron operation for job
 	done   bool       // does it finish
 }
 
@@ -71,7 +74,7 @@ func (e *Exec) DoExec() {
 	}
 
 	// exec
-	logName := e.Name + e.GetNameID8b()
+	logName := e.Name + e.GetNameID8b() + ".log"
 	DoExecute(logName, e.Command)
 	e.done = true
 }
@@ -79,9 +82,9 @@ func (e *Exec) DoExec() {
 // StartCron do schedule of Exec
 func (e *Exec) StartCron() {
 	// check
-	if e.CronOP != CronStart || e.CronOP != CronEnd {
-		return
-	}
+	//if e.CronOP != CronStart || e.CronOP != CronEnd {
+	//return
+	//}
 	if e.time == "" {
 		return
 	}
@@ -91,6 +94,7 @@ func (e *Exec) StartCron() {
 	e.Cron = cron.New()
 	e.Cron.AddFunc(e.time, func() { e.DoExec() })
 	e.Cron.Start()
+	log.Println(e.Name + " cron start!")
 	e.done = true
 }
 
