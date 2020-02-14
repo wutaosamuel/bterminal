@@ -88,7 +88,7 @@ func (e *Exec) StartCron() {
 	if e.time == "" {
 		return
 	}
-	// FIXME:	cron op can not need
+	// FIXME:	cron op do not need
 
 	// start cron
 	e.Cron = cron.New()
@@ -112,6 +112,7 @@ func (e *Exec) StopCron() {
 // phrase command to args[] first
 // exec comand
 // output log
+// TODO: set default system log path
 func DoExecute(logName string, command string) {
 	args := strings.Fields(strings.TrimSpace(command))
 	cmd := exec.Command(args[0], args[1:]...)
@@ -127,6 +128,8 @@ func DoExecute(logName string, command string) {
 	defer f.Close()
 	log.SetOutput(f)
 
+	// TODO: if not work, test for stdout
+	// TODO: if not work, test for stderr
 	out, err := cmd.Output()
 	if err != nil {
 		log.Fatalf("Error: cannot run output - %v", err)
