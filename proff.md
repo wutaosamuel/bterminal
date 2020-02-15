@@ -24,6 +24,10 @@ A fake web/software console for executing commands
   - port
   - username: password
 
+### More
+
+- connect or transfer files between two client
+
 ## Design
 
 ### design core
