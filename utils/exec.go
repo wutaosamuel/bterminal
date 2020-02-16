@@ -19,6 +19,7 @@ type Exec struct {
 	nameID  string // the unique ID for each job
 	Command string // command required to execute
 
+	// TODO: mux lock for writing in log
 	Cron   *cron.Cron // does job need to schedule
 	time   string     // schedule time of job
 	CronOP CronOP     // cron operation for job
