@@ -5,15 +5,14 @@ import (
 	"errors"
 	"io/ioutil"
 	"net"
-	"os"
 
 	"../utils"
 )
 
 // Config contain settings
 type Config struct {
-	path     string
-	port     string
+	Path     string
+	Port     string
 	password string
 	LogPath  string
 }
@@ -25,15 +24,17 @@ func NewConfig() *Config {
 
 /////////////////// setter && getter ///////////////////
 
-// SetPath set path
+// SetPath set name
 // check config file is exist
-func (c *Config) SetPath(path string) error {
-	if _, err := os.Stat(path); err != nil {
-		if os.IsNotExist(err) {
-			return utils.Errs("Config Error: no such file.", err)
-		}
+func (c *Config) SetPath(name string) error {
+	isFile, err := utils.IsFile(name)
+	if err != nil {
+		return utils.Errs("Set Path Error: ", err)
 	}
-	c.path = path
+	if !isFile {
+		return utils.Err("Set Path Error: Not a file")
+	}
+	c.Path = name
 	return nil
 }
 
@@ -46,84 +47,71 @@ func (c *Config) SetPort(port string) error {
 		panic(err)
 	}
 	listener.Close()
-	c.port = port
+	c.Port = port
 	return nil
 }
 
 // SetPassword set password
 func (c *Config) SetPassword(password string) error {
-	if c.password != "" {
-		return utils.Err("Config Error: password is not empty")
-	}
 	c.password = password
 	return nil
 }
 
-// GetPath get config path
-func (c *Config) GetPath() string { return c.path }
+// GetPath get config name
+func (c *Config) GetPath() string { return c.Path }
 
 // GetPort get port
-func (c *Config) GetPort() string { return c.port }
+func (c *Config) GetPort() string { return c.Port }
 
 /////////////////// main ///////////////////
 
-// Load load config file
-func (c *Config) Load(path string) error {
+// JConfig for reading or writing json config
 	type JConfig struct {
-		port     string
-		password string
-		logPath  string
+		Port     string		`json:"port,omitempty"`
+		Password string		`json:"password,omitempty"`
+		LogPath  string		`json:"logPath,omitempty"`
 	}
+
+// Load load config file
+func (c *Config) Load(name string) error {
 	config := &JConfig{}
-	if c.path == "" && path == "" {
-		path = "config.json"
-	}
-	if err := c.SetPath(path); err != nil {
+	if err := c.SetPath(name); err != nil {
 		return err
 	}
-	var buffer []byte
-	buffer, err := ioutil.ReadFile(c.path)
+	buffer, err := ioutil.ReadFile(c.Path)
 	if err != nil {
 		return utils.Errs("Config Error: Cannot read file.", err)
 	}
-	err = json.Unmarshal(buffer, &config)
-	if err != nil {
+	if err = json.Unmarshal(buffer, config); err != nil {
 		return utils.Errs("Config Error: Cannot decode json", err)
 	}
-	c.port = config.port
-	c.password = config.password
-	c.LogPath = config.logPath
+	c.Port = config.Port
+	c.password = config.Password
+	c.LogPath = config.LogPath
 	return nil
 }
 
 // UpdateJSON update json
 func (c *Config) UpdateJSON() error {
-	type JConfig struct {
-		port     string
-		password string
-		logPath  string
-	}
-	var buffer []byte
 	config := &JConfig{}
-	buffer, err := ioutil.ReadFile(c.path)
+	buffer, err := ioutil.ReadFile(c.Path)
 	if err != nil {
 		return utils.Errs("Config Error: Cannot read file.", err)
 	}
-	err = json.Unmarshal(buffer, &config)
-	if config.port != c.port || config.password != c.password {
-		config.port = c.port
-		config.password = c.password
-		config.logPath = c.LogPath
+	err = json.Unmarshal(buffer, config)
+	if config.Port != c.Port || config.Password != c.password {
+		config.Port = c.Port
+		config.Password = c.password
+		config.LogPath = c.LogPath
 		buffer, err = json.Marshal(&config)
 		if err != nil {
 			return utils.Errs("Config Error: Cannot marshal file.", err)
 		}
-		err = ioutil.WriteFile(c.path, buffer, 0644)
+		err = ioutil.WriteFile(c.Path, buffer, 0777)
 		if err != nil {
 			return utils.Errs("Config Error: Cannot write file.", err)
 		}
 	}
-
 	return nil
 }
 
