@@ -10,11 +10,13 @@ import (
 )
 
 // Config contain settings
+// TODO:
 type Config struct {
 	Path     string
 	Port     string
 	password string
 	LogPath  string
+	//HTMLPath string
 }
 
 // NewConfig is a constructor
@@ -66,11 +68,11 @@ func (c *Config) GetPort() string { return c.Port }
 /////////////////// main ///////////////////
 
 // JConfig for reading or writing json config
-	type JConfig struct {
-		Port     string		`json:"port,omitempty"`
-		Password string		`json:"password,omitempty"`
-		LogPath  string		`json:"logPath,omitempty"`
-	}
+type JConfig struct {
+	Port     string `json:"port,omitempty"`
+	Password string `json:"password,omitempty"`
+	LogPath  string `json:"logPath,omitempty"`
+}
 
 // Load load config file
 func (c *Config) Load(name string) error {
