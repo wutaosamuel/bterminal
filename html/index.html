@@ -27,7 +27,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     </div>
       <p>
         <label>Password:</label>
-        <input class="w3-input w3-border" id="passwordID" type="text" placeholder="Password" style="width:100%">
+        <input class="w3-input w3-border" id="passwordID" type="password" placeholder="Password" style="width:100%">
       </p>
       <p id="passwordRst"></p>
       <button type="button" onclick="sendPassEn()" class="w3-button w3-red w3-margin-bottom w3-right">Confirm</button>
@@ -40,6 +40,7 @@ function sendPassEn(){
   var pass = document.getElementById("passwordID").value
   var passEn = window.btoa(pass)
   var form = document.createElement("form")
+  form.setAttribute("method", "POST")
   var input = document.createElement("input")
   input.setAttribute("type", "hidden")
   input.setAttribute("name", "password")
@@ -48,7 +49,7 @@ function sendPassEn(){
   form.appendChild(input)
   document.body.appendChild(form)
   form.submit()
-  document.getElementById("passwordRst").innerHTML = input.value
+  //document.getElementById("passwordRst").innerHTML = input.value
   document.body.removeChild(form)
 }
 

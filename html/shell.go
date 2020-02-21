@@ -17,10 +17,19 @@ import (
 // Name & ID & Command & Crontab
 func HandleShell(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
+	PrintHTMLInfo(req)
 	// TODO: check client cookie here
+
+	// Get shell.html page
+	if req.Method == "GET" {
+		fmt.Println("handle shell method get")
+		http.ServeFile(w, req, "html/shell.html")
+	}
 
 	// Read form
 	// TODO: do exec here
-	fmt.Println(req.Form["command"])
-	fmt.Println(req.Form["crontab"])
+	if req.Method == "POST" {
+		fmt.Println(req.Form["command"])
+		fmt.Println(req.Form["crontab"])
+	}
 }

@@ -6,6 +6,9 @@ package html
  */
 
 import (
+	"fmt"
+	"net/http"
+
 	"../utils"
 )
 
@@ -48,4 +51,24 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 	// replease job html
 	html, _ := utils.ReplaceHTML(template, 1, p)
 	return html
+}
+
+// HandleJobs handle jobs
+func HandleJobs(w http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	PrintHTMLInfo(req)
+	// TODO: check client cookie here
+
+	// Get shell.html page
+	if req.Method == "GET" {
+		fmt.Println("handle Jobs method get")
+		http.ServeFile(w, req, "html/jobs.html")
+	}
+
+	// Read form
+	// TODO: do exec here
+	if req.Method == "POST" {
+		PrintHTMLInfo(req)
+		fmt.Println("need job action")
+	}
 }
