@@ -1,4 +1,4 @@
-package utils
+package job
 
 import (
 	"log"
@@ -12,6 +12,7 @@ import (
 
 // TODO: recover jobs
 // TODO: cycle job is not work on done
+// TODO: set log path
 
 // Exec type for do exec
 type Exec struct {
@@ -20,21 +21,10 @@ type Exec struct {
 	Command string // command required to execute
 
 	// TODO: mux lock for writing in log
-	Cron   *cron.Cron // does job need to schedule
-	time   string     // schedule time of job
-	CronOP CronOP     // cron operation for job
-	done   bool       // does it finish
+	Cron *cron.Cron // does job need to schedule
+	time string     // schedule time of job
+	done bool       // does it finish
 }
-
-// CronOP is cron option
-type CronOP uint8
-
-// CronOP const
-const (
-	CronNull CronOP = 1 << iota
-	CronStart
-	CronEnd
-)
 
 /////////////////// Setter&&Getter ///////////////////
 
@@ -44,8 +34,8 @@ func NewExec() *Exec {
 	return &Exec{nameID: uuid}
 }
 
-// SetTime by cron like format schedule
-func (e *Exec) SetTime(m string, h string, d string, mon string, w string) {
+// SetCronTime by cron like format schedule
+func (e *Exec) SetCronTime(m string, h string, d string, mon string, w string) {
 	e.time = m + " " + h + " " + d + " " + mon + " " + w
 }
 
@@ -61,6 +51,9 @@ func (e *Exec) GetTime() string { return e.time }
 // GetDone get done signal
 func (e *Exec) GetDone() bool { return e.done }
 
+// GetLogName get log name
+func (e *Exec) GetLogName() string { return e.Name + "_" + e.GetNameID8b() + ".log" }
+
 /////////////////// Main ///////////////////
 
 // DoExec execute with Exec struct
@@ -75,7 +68,7 @@ func (e *Exec) DoExec() {
 	}
 
 	// exec
-	logName := e.Name + e.GetNameID8b() + ".log"
+	logName := e.GetLogName()
 	DoExecute(logName, e.Command)
 	e.done = true
 }
@@ -87,26 +80,29 @@ func (e *Exec) StartCron() {
 	//return
 	//}
 	if e.time == "" {
-		return
+		log.Fatalln("no time")
 	}
-	// FIXME:	cron op do not need
 
 	// start cron
 	e.Cron = cron.New()
-	e.Cron.AddFunc(e.time, func() { e.DoExec() })
-	e.Cron.Start()
+	if _, err := e.Cron.AddFunc(e.time, func() {e.DoExec()}); err != nil {
+		log.Fatalln(err)
+	}
 	log.Println(e.Name + " cron start!")
-	e.done = true
+	e.Cron.Start()
 }
 
 // StopCron to stop job
 func (e *Exec) StopCron() {
-	if e.CronOP != CronEnd {
-		return
-	}
 	e.Cron.Stop()
 	e.done = false
 	log.Println(e.Name + " cron has stopped!")
+}
+
+// DeleteLog to delete log
+func (e *Exec) DeleteLog() error {
+	logName := e.GetLogName()
+	return os.RemoveAll(logName)
 }
 
 // DoExecute execute command and log recording
@@ -119,21 +115,21 @@ func DoExecute(logName string, command string) {
 	cmd := exec.Command(args[0], args[1:]...)
 	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
 
+	log.Println("do execute")
 	f, err := os.OpenFile(
 		logName,
 		os.O_RDWR|os.O_CREATE|os.O_APPEND,
 		0666)
 	if err != nil {
-		log.Fatalf("Error: open log file - %v", err)
+		panic(err)
 	}
 	defer f.Close()
 	log.SetOutput(f)
 
-	// TODO: if not work, test for stdout
-	// TODO: if not work, test for stderr
-	out, err := cmd.Output()
-	if err != nil {
-		log.Fatalf("Error: cannot run output - %v", err)
+	out, err := cmd.CombinedOutput()
+	if err == nil {
+		log.Println(command)
+		log.Println("done")
 	}
-	log.Printf("The output - %s\n", out)
+	log.Printf("The output:\n\n%s\n", out)
 }

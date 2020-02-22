@@ -1,8 +1,7 @@
-package utils
+package job
 
 import (
 	"io/ioutil"
-	"os"
 	"testing"
 	"time"
 )
@@ -13,15 +12,13 @@ func TestDoExec(t *testing.T) {
 	testExec.Name = "tmp"
 	logName := testExec.Name + testExec.GetNameID8b() + ".log"
 	testExec.Command = "ls -l"
-	testExec.DoExec()
-	testExec.SetTime("*/2", "*", "*", "*", "*")
-	testExec.CronOP = CronStart
+	testExec.SetCronTime("*/1", "*", "*", "*", "*")
+	t.Log(testExec)
 	testExec.StartCron()
-	t.Log(testExec.done)
-	time.Sleep(60)
-	testExec.CronOP = CronEnd
+	t.Log("Cron Start")
+	time.Sleep(time.Duration(121)*time.Second)
 	testExec.StopCron()
-	t.Log(testExec.done)
+	t.Log("Cron Stop")
 
 	f, err := ioutil.ReadFile(logName)
 	if err != nil {
@@ -30,7 +27,7 @@ func TestDoExec(t *testing.T) {
 	//str := str(f)  // bytes convert to "string"
 	t.Log(f)
 
-	if err := os.Remove(logName); err != nil {
+	if err := testExec.DeleteLog(); err != nil {
 		t.Fatal("remove file fail")
 	}
 }
