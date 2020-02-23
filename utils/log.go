@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
-	"io/ioutil"
 )
 
 // LogFunction for doing log action
@@ -17,7 +17,7 @@ type LogFunction interface {
 }
 
 // LogActCallback for log call back
-type LogActCallback func(logger *log.Logger)
+type LogActCallback func(*log.Logger)
 
 // WriteLog write into log
 // Println only
@@ -32,14 +32,25 @@ func WriteLog(logger *log.Logger, logName, logInfo string) {
 		panic(err)
 	}
 	defer f.Close()
-	logger = log.New(f, "", log.Ldate | log.Ltime | log.LUTC)
+	logger = log.New(f, "", log.Ldate|log.Ltime|log.LUTC)
 	logger.Println(logInfo)
 	return
 }
 
 // WriteLogFunc write into log by func
-func WriteLogFunc(logger *log.Logger, logName string, f LogActCallback) error {
-
+func WriteLogFunc(logger *log.Logger, logName string, logFunc LogActCallback) {
+	// open log file
+	f, err := os.OpenFile(
+		logName,
+		os.O_RDWR|os.O_CREATE|os.O_APPEND,
+		0666)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	logger = log.New(f, "", log.Ldate|log.Ltime|log.LUTC)
+	logFunc(logger)
+	return
 }
 
 // ReadLog read log

@@ -24,8 +24,8 @@ type Exec struct {
 	Command string // command required to execute
 	LogPath string // log path
 
-	*sync.RWMutex // Read & write lock
-	*log.Logger
+	*sync.RWMutex 			// Read & write lock
+	Logger  *log.Logger // logger for exec
 
 	Cron *cron.Cron // does job need to schedule
 	time string     // schedule time of job
