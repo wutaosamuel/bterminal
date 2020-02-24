@@ -18,7 +18,8 @@ import (
 func HandleShell(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	PrintHTMLInfo(req)
-	// TODO: check client cookie here
+	// TODO: 
+	// Check client cookie here
 
 	// Get shell.html page
 	if req.Method == "GET" {
@@ -29,7 +30,9 @@ func HandleShell(w http.ResponseWriter, req *http.Request) {
 	// Read form
 	// TODO: do exec here
 	if req.Method == "POST" {
-		fmt.Println(req.Form["command"])
-		fmt.Println(req.Form["crontab"])
+		command := FormToString(req, "command")
+		crontab := FormToString(req, "crontab")
+		fmt.Println(command)
+		fmt.Println(crontab)
 	}
 }

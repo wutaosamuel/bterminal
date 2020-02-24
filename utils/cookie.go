@@ -8,12 +8,21 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// CookieFunction define cookie
+type CookieFunction interface {
+	NewCookie()
+	SetSession()
+	SetToken()
+	IsSession()
+	IsToken()
+}
+
 // CookieUtils keep date in memory
 type CookieUtils struct {
 	*sync.RWMutex // Read & Write locker
 
-	session *memcache.Cache   // keep cookie in a period time
-	token   map[string]string // avoiding multiple submit form action
+	session *memcache.Cache // keep cookie in a period time
+	token   *memcache.Cache // avoiding multiple submit form action
 }
 
 /////////////////// Setter & Getter //////////////////
@@ -23,21 +32,23 @@ type CookieUtils struct {
 func NewCookie(defaultExpiration time.Duration) *CookieUtils {
 	return &CookieUtils{
 		session: memcache.New(defaultExpiration, -1),
-		token: make(map[string]string)}
+		token:   memcache.New(defaultExpiration, 3*time.Hour)}
 }
 
 // SetSession generate client uuid and store in memory
-func (c *CookieUtils) SetSession() {
+// return session for setting cookie
+func (c *CookieUtils) SetSession() string {
 	sessionID := uuid.Must(uuid.NewV4()).String()
 	c.session.SetDefault(sessionID, "1")
+	return sessionID
 }
 
 // SetToken set token, use once only
-func (c *CookieUtils) SetToken() {
+// return token for setting cookie
+func (c *CookieUtils) SetToken() string {
 	token := uuid.Must(uuid.NewV4()).String()
-	c.Lock()
-	c.token[token] = "1"
-	c.Unlock()
+	c.token.SetDefault(token, "2")
+	return token
 }
 
 /////////////////// Main //////////////////
@@ -50,11 +61,9 @@ func (c *CookieUtils) IsSession(sessionID string) bool {
 
 // IsToken check if is token then delete it
 func (c *CookieUtils) IsToken(token string) bool {
-	c.Lock()
-	_, found := c.token[token]
+	_, found := c.token.Get(token)
 	if found {
-		delete(c.token, token)
+		c.token.Delete(token)
 	}
-	c.Unlock()
 	return found
 }
