@@ -32,7 +32,7 @@ type CookieUtils struct {
 func NewCookie(defaultExpiration time.Duration) *CookieUtils {
 	return &CookieUtils{
 		session: memcache.New(defaultExpiration, -1),
-		token:   memcache.New(defaultExpiration, 3*time.Hour)}
+		token:   memcache.New(30*time.Minute, 1*time.Hour)}
 }
 
 // SetSession generate client uuid and store in memory

@@ -30,7 +30,7 @@ func NewJobLog() *JobLog {
 // SetID set id for detail and delete
 func (l *JobLog) SetID(i string) {
 	l.ID = i
-	l.Delete = "Delete-" + i 
+	l.Delete = "Delete-" + i
 	l.Detail = "Detail-" + i
 }
 
@@ -56,19 +56,19 @@ func GenerateJobLogs(logs []JobLog, template, pattern string) string {
 }
 
 // HandleLogs handle logs.html action
-func HandleLogs(w http.ResponseWriter, req *http.Request) {
+func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	PrintHTMLInfo(req)
-	// TODO: check client cookie here
 
-	// Get shell.html page
-	if req.Method == "GET" {
-		fmt.Println("handle Logs method get")
-		http.ServeFile(w, req, "html/logs.html")
+	// authentication is login
+	if !c.authentication(w, req, "/html/logs.html") {
+		return
 	}
 
 	// Read form
-	// TODO: do exec here
+	// TODO:
+	// Generate detail page here
+	// Or delete log
 	if req.Method == "POST" {
 		fmt.Println("need log action")
 	}

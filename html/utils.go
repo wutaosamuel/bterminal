@@ -4,58 +4,83 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"../conf"
+	"../job"
 	"../utils"
 )
 
 // ConfigHTML for HTML use
 type ConfigHTML struct {
+	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
-	Config *conf.Config // local config process
+	Config *conf.Config        // local config process
+	Execs  map[string]job.Exec // job execution
 }
-
 
 // NewConfigHTML create new one
 func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 	return &ConfigHTML{
+		&sync.RWMutex{},
 		utils.NewCookie(defaultExpiration),
-		conf.NewConfig()}
+		conf.NewConfig(),
+		make(map[string]job.Exec)}
 }
 
 // ConfigHTMLInit init ConfigHTML
 // DefaultExpiration is 6 hours
 // every cookie is kept whin 6 hours
 func (c *ConfigHTML) ConfigHTMLInit() *ConfigHTML {
-	c = NewConfigHTML(6*time.Hour)
-	return NewConfigHTML(6*time.Hour)
+	c = NewConfigHTML(6 * time.Hour)
+	return NewConfigHTML(6 * time.Hour)
 }
 
 /////////////////// Private ////////////////
 
 // authentication check security
 // not working on index page
-func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, html string) {
-	if !c.isLogIn(w, req) {
-		http.Redirect(w, req, "/", http.StatusFound)
-		return
+func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, html string) bool {
+	if !c.isLogIn(req) {
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return false
 	}
 	c.setToken(w)
 	http.ServeFile(w, req, html)
-	return
+	return true
 }
 
 // isLogIn check whether user has login in
 // Check cookie has session ID
 // if not, return -> redirect to index page for login
 // or -> serve html page
-func (c *ConfigHTML) isLogIn(w http.ResponseWriter, req *http.Request) bool {
+func (c *ConfigHTML) isLogIn(req *http.Request) bool {
 	// avoiding multiple cookies with same name
 	for _, cookie := range req.Cookies() {
 		if cookie.Name == utils.CookieSession {
 			if c.IsSession(cookie.Value) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// isToken check token form cookie
+func (c *ConfigHTML) isToken(w http.ResponseWriter, req *http.Request) bool {
+	// avoiding multiple cookie with same name
+	for _, cookie := range req.Cookies() {
+		if cookie.Name == utils.CookieToken {
+			if c.IsToken(cookie.Value) {
+				// delete from cookie
+				tokenCookie := &http.Cookie{
+					Name:     utils.CookieToken,
+					Value:    cookie.Value,
+					MaxAge:   -1,
+					HttpOnly: true}
+				http.SetCookie(w, tokenCookie)
 				return true
 			}
 		}

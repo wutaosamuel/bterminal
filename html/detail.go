@@ -6,9 +6,6 @@ package html
  */
 
 import (
-	"fmt"
-	"net/http"
-
 	"../utils"
 )
 
@@ -48,20 +45,14 @@ func GenerateDetail(details []Detail, template, pattern string) string {
 }
 
 // HandleDetail handle detail action
-func HandleDetail(w http.ResponseWriter, req *http.Request) {
-	req.ParseForm()
-	PrintHTMLInfo(req)
-	// TODO: check client cookie here
+//func HandleDetail(w http.ResponseWriter, req *http.Request) {
+	//req.ParseForm()
+	//PrintHTMLInfo(req)
 
-	// Get shell.html page
-	if req.Method == "GET" {
-		fmt.Println("handle Detail method get")
-		http.ServeFile(w, req, "html/detail.html")
-	}
 
-	// Read form
-	// TODO: do exec here
-	if req.Method == "POST" {
-		fmt.Println("need detail action")
-	}
-}
+	//// Read form
+	//// TODO: do exec here
+	//if req.Method == "POST" {
+		//fmt.Println("need detail action")
+	//}
+//}

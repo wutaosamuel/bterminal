@@ -10,8 +10,6 @@ import (
 
 	cron "github.com/robfig/cron"
 	uuid "github.com/satori/go.uuid"
-
-	"../utils"
 )
 
 // TODO: recover jobs
@@ -24,12 +22,11 @@ type Exec struct {
 	Command string // command required to execute
 	LogPath string // log path
 
-	*sync.RWMutex 			// Read & write lock
-	Logger  *log.Logger // logger for exec
+	*sync.RWMutex             // Read & write lock
+	Logger        *log.Logger // logger for exec
 
 	Cron *cron.Cron // does job need to schedule
-	time string     // schedule time of job
-	done bool       // does it finish
+	Time string     // schedule time of job
 }
 
 /////////////////// Setter&&Getter ///////////////////
@@ -50,42 +47,35 @@ func NewExec() *Exec {
 func (e *Exec) Init() error {
 	e.nameID = uuid.Must(uuid.NewV4()).String()
 	// set log path
-	if err := e.SetLogPath(); err != nil {
-		return err
-	}
+	e.SetLogPath()
 	return nil
 }
 
 // SetCronTime by cron like format schedule
 func (e *Exec) SetCronTime(m string, h string, d string, mon string, w string) {
-	e.time = m + " " + h + " " + d + " " + mon + " " + w
+	e.Time = m + " " + h + " " + d + " " + mon + " " + w
 }
 
 // SetLogPath set log path
-func (e *Exec) SetLogPath() error {
+func (e *Exec) SetLogPath() {
 	// FIXME: path not exist
-	if e.Name == "" {
-		return utils.Err("Error: name required")
-	}
 	if len(e.LogPath) < 4 {
 		e.LogPath = path.Join(e.LogPath, e.GetLogName())
-		return nil
+		return
 	}
 	if e.LogPath[len(e.LogPath)-4:] != ".log" {
 		e.LogPath = path.Join(e.LogPath, e.GetLogName())
-		return nil
+		return
 	}
-	return nil
+	return
 }
 
 // GetNameID get uuid for job
 func (e *Exec) GetNameID() string { return e.nameID }
+
 // GetNameID8b get the first 8 bits uuid string
 func (e *Exec) GetNameID8b() string { return e.nameID[:8] }
-// GetTime get time of job
-func (e *Exec) GetTime() string { return e.time }
-// GetDone get done signal
-func (e *Exec) GetDone() bool { return e.done }
+
 // GetLogName get log name
 func (e *Exec) GetLogName() string { return e.Name + "_" + e.GetNameID8b() + ".log" }
 
@@ -105,7 +95,6 @@ func (e *Exec) DoExec() {
 	// exec
 	logName := e.GetLogName()
 	DoExecute(logName, e.Command)
-	e.done = true
 }
 
 // StartCron do schedule of Exec
@@ -114,13 +103,13 @@ func (e *Exec) StartCron() {
 	//if e.CronOP != CronStart || e.CronOP != CronEnd {
 	//return
 	//}
-	if e.time == "" {
+	if e.Time == "" {
 		log.Fatalln("no time")
 	}
 
 	// start cron
 	e.Cron = cron.New()
-	if _, err := e.Cron.AddFunc(e.time, func() { e.DoExec() }); err != nil {
+	if _, err := e.Cron.AddFunc(e.Time, func() { e.DoExec() }); err != nil {
 		log.Fatalln(err)
 	}
 	log.Println(e.Name + " cron start!")
@@ -130,7 +119,6 @@ func (e *Exec) StartCron() {
 // StopCron to stop job
 func (e *Exec) StopCron() {
 	e.Cron.Stop()
-	e.done = false
 	log.Println(e.Name + " cron has stopped!")
 }
 

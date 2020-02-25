@@ -9,7 +9,7 @@ import (
 func TestConfig(t *testing.T) {
 	tmpLog := "./testload.log"
 	tmpConfig := &Config{}
-	tmpConfig.SetPassword("1234567")
+	tmpConfig.Password = "1234567"
 	tmpConfig.LogPath = "tmp-config"
 	_, err := os.Create(tmpLog)
 	if err != nil {

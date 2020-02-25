@@ -12,6 +12,8 @@ import (
 	"../utils"
 )
 
+// TODO: Restore Jobs
+
 // Job for job html
 type Job struct {
 	Name    string // job name
@@ -54,19 +56,16 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 }
 
 // HandleJobs handle jobs
-func HandleJobs(w http.ResponseWriter, req *http.Request) {
+func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	PrintHTMLInfo(req)
-	// TODO: check client cookie here
 
-	// Get shell.html page
-	if req.Method == "GET" {
-		fmt.Println("handle Jobs method get")
-		http.ServeFile(w, req, "html/jobs.html")
+	// authentication is login
+	if !c.authentication(w, req, "/html/jobs.html") {
+		return
 	}
 
 	// Read form
-	// TODO: do exec here
 	if req.Method == "POST" {
 		PrintHTMLInfo(req)
 		fmt.Println("need job action")
