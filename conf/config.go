@@ -11,12 +11,12 @@ import (
 
 // Config contain settings
 // TODO:
+// Pass value by cli
 type Config struct {
 	Path     string
 	Port     string
-	password string
+	Password string
 	LogPath  string
-	//HTMLPath string
 }
 
 // NewConfig is a constructor
@@ -53,18 +53,6 @@ func (c *Config) SetPort(port string) error {
 	return nil
 }
 
-// SetPassword set password
-func (c *Config) SetPassword(password string) error {
-	c.password = password
-	return nil
-}
-
-// GetPath get config name
-func (c *Config) GetPath() string { return c.Path }
-
-// GetPort get port
-func (c *Config) GetPort() string { return c.Port }
-
 /////////////////// main ///////////////////
 
 // JConfig for reading or writing json config
@@ -88,7 +76,7 @@ func (c *Config) Load(name string) error {
 		return utils.Errs("Config Error: Cannot decode json", err)
 	}
 	c.Port = config.Port
-	c.password = config.Password
+	c.Password = config.Password
 	c.LogPath = config.LogPath
 	return nil
 }
@@ -101,9 +89,9 @@ func (c *Config) UpdateJSON() error {
 		return utils.Errs("Config Error: Cannot read file.", err)
 	}
 	err = json.Unmarshal(buffer, config)
-	if config.Port != c.Port || config.Password != c.password {
+	if config.Port != c.Port || config.Password != c.Password {
 		config.Port = c.Port
-		config.Password = c.password
+		config.Password = c.Password
 		config.LogPath = c.LogPath
 		buffer, err = json.Marshal(&config)
 		if err != nil {
@@ -123,10 +111,10 @@ func (c *Config) ChangePassword(current string, new1 string, new2 string) error 
 		return errors.New("password not match")
 	}
 	// FIXME: no password
-	if current != c.password {
+	if current != c.Password {
 		return errors.New("password not correct")
 	}
-	c.password = new1
+	c.Password = new1
 	if err := c.UpdateJSON(); err != nil {
 		return err
 	}

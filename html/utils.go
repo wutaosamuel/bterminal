@@ -4,18 +4,40 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
+	"../conf"
 	"../utils"
 )
 
-// CookieHTML for HTML use
-type CookieHTML struct {
-	*utils.CookieUtils
+// ConfigHTML for HTML use
+type ConfigHTML struct {
+	*utils.CookieUtils // store session and token in cookie
+
+	Config *conf.Config // local config process
 }
+
+
+// NewConfigHTML create new one
+func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
+	return &ConfigHTML{
+		utils.NewCookie(defaultExpiration),
+		conf.NewConfig()}
+}
+
+// ConfigHTMLInit init ConfigHTML
+// DefaultExpiration is 6 hours
+// every cookie is kept whin 6 hours
+func (c *ConfigHTML) ConfigHTMLInit() *ConfigHTML {
+	c = NewConfigHTML(6*time.Hour)
+	return NewConfigHTML(6*time.Hour)
+}
+
+/////////////////// Private ////////////////
 
 // authentication check security
 // not working on index page
-func (c *CookieHTML) authentication(w http.ResponseWriter, req *http.Request, html string) {
+func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, html string) {
 	if !c.isLogIn(w, req) {
 		http.Redirect(w, req, "/", http.StatusFound)
 		return
@@ -29,7 +51,7 @@ func (c *CookieHTML) authentication(w http.ResponseWriter, req *http.Request, ht
 // Check cookie has session ID
 // if not, return -> redirect to index page for login
 // or -> serve html page
-func (c *CookieHTML) isLogIn(w http.ResponseWriter, req *http.Request) bool {
+func (c *ConfigHTML) isLogIn(w http.ResponseWriter, req *http.Request) bool {
 	// avoiding multiple cookies with same name
 	for _, cookie := range req.Cookies() {
 		if cookie.Name == utils.CookieSession {
@@ -42,7 +64,7 @@ func (c *CookieHTML) isLogIn(w http.ResponseWriter, req *http.Request) bool {
 }
 
 // setToken allows user single submit form
-func (c *CookieHTML) setToken(w http.ResponseWriter) {
+func (c *ConfigHTML) setToken(w http.ResponseWriter) {
 	// generate and store a token
 	token := c.SetToken()
 	tokenCookie := &http.Cookie{
@@ -54,15 +76,15 @@ func (c *CookieHTML) setToken(w http.ResponseWriter) {
 }
 
 // setSession set session to user's browser
-func (c *CookieHTML) setSession(w http.ResponseWriter) {
+func (c *ConfigHTML) setSession(w http.ResponseWriter) {
 	// generate and store a session
 	session := c.SetSession()
 	sessionCookie := &http.Cookie{
-		Name: utils.CookieSession,
-		Value: session,
-		MaxAge: 43200,	// 12 hours
+		Name:     utils.CookieSession,
+		Value:    session,
+		MaxAge:   43200, // 12 hours
 		HttpOnly: true}
-  http.SetCookie(w, sessionCookie)
+	http.SetCookie(w, sessionCookie)
 }
 
 // PrintHTMLInfo infomation

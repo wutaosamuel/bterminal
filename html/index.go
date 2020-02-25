@@ -13,7 +13,7 @@ import (
 // HandleIndex is process functions of index.html
 // TODO:
 // Config
-func (c *CookieHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
+func (c *ConfigHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
 	//http.ServeFile(w, req, "html/")
 	req.ParseForm()
 	PrintHTMLInfo(req)
