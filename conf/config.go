@@ -29,12 +29,12 @@ func NewConfig() *Config {
 }
 
 // ConfigInit to check config
-func (c *Config) ConfigInit() {
+func (c *Config) Init() {
 	if c.Path != "" {
 		c.SetPath(c.Path)
 	}
 	c.SetPort(c.Port)
-	c.SetLogDir(c.SetLogDir)
+	c.SetLogDir(c.LogDir)
 }
 
 // SetPath set config path
@@ -100,7 +100,7 @@ func (c *Config) Load(name string) {
 	c.Password = config.Password
 	c.LogDir = config.LogDir
 	// check config
-	c.ConfigInit()
+	c.Init()
 }
 
 // UpdateJSON update json

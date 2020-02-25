@@ -5,7 +5,6 @@ package html
  */
 
 import (
-	"fmt"
 	"net/http"
 
 	"../job"
@@ -34,14 +33,14 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		name := FormToString(req, "name")
 		command := FormToString(req, "command")
 		crontab := FormToString(req, "crontab")
-		fmt.Println(name)
-		fmt.Println(command)
-		fmt.Println(crontab)
 		// command needed
 		if command == "" {
 			// TODO: display info
 			http.Redirect(w, req, "/html/shell.html", http.StatusNotModified)
 			return
+		}
+		c.setExec(name, command, crontab)
+		if crontab == "" {
 		}
 	}
 }
@@ -55,6 +54,9 @@ func (c *ConfigHTML) setExec(name, command, crontab string) {
 	e := job.NewExecS()
 	e.Name = name
 	e.Command = command
-	e.LogPath = c.Config.LogPath
+	e.LogPath = c.Config.LogDir
 	e.Time = crontab
+	e.Init()
+	c.Jobs[e.GetNameID()] = *e
+	c.Unlock()
 }

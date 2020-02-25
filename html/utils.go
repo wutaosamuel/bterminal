@@ -18,7 +18,8 @@ type ConfigHTML struct {
 	*utils.CookieUtils // store session and token in cookie
 
 	Config *conf.Config        // local config process
-	Execs  map[string]job.Exec // job execution
+	//JobID		string  // id for each job
+	Jobs  map[string]job.Exec // job execution
 }
 
 // NewConfigHTML create new one
