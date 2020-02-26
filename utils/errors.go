@@ -35,3 +35,12 @@ func Errs(text string, err error) error {
 	errs := &errorString{text, err}
 	return errors.New(errs.Errors())
 }
+
+////////////////// General ///////////////////
+
+// CheckPanic check err != nil panic
+func CheckPanic(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

@@ -17,9 +17,9 @@ type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
-	Config *conf.Config        // local config process
-	//JobID		string  // id for each job
-	Jobs  map[string]job.Exec // job execution
+	Config   *conf.Config        // local config process
+	JobID    []string            // id for each job
+	CronJobs map[string]job.Exec // keep cron jobs
 }
 
 // NewConfigHTML create new one
@@ -28,6 +28,7 @@ func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 		&sync.RWMutex{},
 		utils.NewCookie(defaultExpiration),
 		conf.NewConfig(),
+		[]string{},
 		make(map[string]job.Exec)}
 }
 
@@ -37,6 +38,21 @@ func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 func (c *ConfigHTML) ConfigHTMLInit() *ConfigHTML {
 	c = NewConfigHTML(6 * time.Hour)
 	return NewConfigHTML(6 * time.Hour)
+}
+
+/////////////////// Public ////////////////
+
+// PrintHTMLInfo infomation
+func PrintHTMLInfo(req *http.Request) {
+	fmt.Println(req.Form)
+	fmt.Println("path: ", req.URL.Path)
+	fmt.Println("scheme: ", req.URL.Scheme)
+	fmt.Println("method: ", req.Method)
+}
+
+// FormToString to string
+func FormToString(req *http.Request, attribute string) string {
+	return strings.Join(req.Form[attribute], "")
 }
 
 /////////////////// Private ////////////////
@@ -113,15 +129,36 @@ func (c *ConfigHTML) setSession(w http.ResponseWriter) {
 	http.SetCookie(w, sessionCookie)
 }
 
-// PrintHTMLInfo infomation
-func PrintHTMLInfo(req *http.Request) {
-	fmt.Println(req.Form)
-	fmt.Println("path: ", req.URL.Path)
-	fmt.Println("scheme: ", req.URL.Scheme)
-	fmt.Println("method: ", req.Method)
+// setExec set log struct
+// config must be contain
+func (c *ConfigHTML) setExec(name, command, crontab string) *job.Exec {
+	e := job.NewExecS()
+	e.Name = name
+	e.Command = command
+	e.LogPath = c.Config.LogDir
+	e.Time = crontab
+	e.Init()
+	return e
 }
 
-// FormToString to string
-func FormToString(req *http.Request, attribute string) string {
-	return strings.Join(req.Form[attribute], "")
+// setJob set job for job.html
+func (c *ConfigHTML) setJob(e *job.Exec) *Job {
+	j := NewJob()
+	j.Name = e.Name
+	j.ID = e.GetNameID()
+	j.Command = e.Command
+	j.Crontab = e.Time
+	j.Init()
+	return j
+}
+
+// setJobLog set job log for logs.html
+func (c *ConfigHTML) setJobLog(e *job.Exec) *JobLog {
+	jobLog := NewJobLog()
+	jobLog.Name = e.Name
+	jobLog.ID = e.GetNameID()
+	jobLog.Command = e.Command
+	jobLog.Crontab = e.Time
+	jobLog.Init()
+	return jobLog
 }

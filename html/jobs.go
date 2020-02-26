@@ -28,6 +28,11 @@ func NewJob() *Job {
 	return &Job{}
 }
 
+// Init init job
+func (j *Job) Init() {
+	j.SetID(j.ID)
+}
+
 // SetID set id and button
 func (j *Job) SetID(i string) {
 	j.ID = i
@@ -35,6 +40,8 @@ func (j *Job) SetID(i string) {
 }
 
 // GenerateJobs automatically generate
+// if jobs.html is not at html directory
+// or force replace jobs.html
 func GenerateJobs(jobs []Job, template, pattern string) string {
 	// if num of jobs is 0,
 	// replace {{{ 1 }}} and output template only
@@ -43,7 +50,6 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 		return html
 	}
 
-	// TODO: append job in html, not re-generate all jobs into html
 	// process pattern first
 	var p string
 	for _, job := range jobs {

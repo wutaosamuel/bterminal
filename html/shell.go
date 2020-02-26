@@ -7,7 +7,7 @@ package html
 import (
 	"net/http"
 
-	"../job"
+	"../utils"
 )
 
 // HandleShell shell.html func
@@ -23,9 +23,6 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Read form
-	// TODO: 
-	// do exec then genrate log
-	// do cron then genrate jon & log
 	if req.Method == "POST" {
 		if !c.isToken(w, req) {
 			return
@@ -39,24 +36,38 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 			http.Redirect(w, req, "/html/shell.html", http.StatusNotModified)
 			return
 		}
-		c.setExec(name, command, crontab)
+		// do exec then generate log html
+		// TODO: display info
 		if crontab == "" {
+			c.execAction(name, command, crontab)
+		}
+		// do cron then generate job & log
+		if crontab != "" {
+			c.cronAction(name, command, crontab)
 		}
 	}
 }
 
-/////////////////// Private /////////////////
-
-// setExec set log struct
-// config must be contain
-func (c *ConfigHTML) setExec(name, command, crontab string) {
+// execAction action for executing a job
+func (c *ConfigHTML) execAction(name, command, crontab string) {
+	e := c.setExec(name, command, crontab)
+	l := c.setJobLog(e)
+	e.DoExec()
 	c.Lock()
-	e := job.NewExecS()
-	e.Name = name
-	e.Command = command
-	e.LogPath = c.Config.LogDir
-	e.Time = crontab
-	e.Init()
-	c.Jobs[e.GetNameID()] = *e
+	c.JobID = append(c.JobID, e.GetNameID())
+	utils.UpdatePage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	c.Unlock()
+}
+
+// cronAction action for a crontab job
+func (c *ConfigHTML) cronAction(name, command, crontab string) {
+	e := c.setExec(name, command, crontab)
+	j := c.setJob(e)
+	l := c.setJobLog(e)
+	c.Lock()
+	c.JobID = append(c.JobID, e.GetNameID())
+	c.CronJobs[e.GetNameID()] = *e
+	utils.UpdatePage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	utils.UpdatePage(j, "./html/jobs.html", "./html/pattern/job_pattern1.html")
 	c.Unlock()
 }

@@ -27,6 +27,11 @@ func NewJobLog() *JobLog {
 	return &JobLog{}
 }
 
+// Init init joblog
+func (l *JobLog) Init() {
+	l.SetID(l.ID)
+}
+
 // SetID set id for detail and delete
 func (l *JobLog) SetID(i string) {
 	l.ID = i
@@ -35,6 +40,8 @@ func (l *JobLog) SetID(i string) {
 }
 
 // GenerateJobLogs automatically generate
+// if logs.html is not at html directory
+// or force replace logs.html
 func GenerateJobLogs(logs []JobLog, template, pattern string) string {
 	// if num of jobs is 0,
 	// replace {{{ 1 }}} and output template only
@@ -52,7 +59,6 @@ func GenerateJobLogs(logs []JobLog, template, pattern string) string {
 
 	// replease job html
 	html, _ := utils.ReplaceHTML(template, 1, p)
-	html, _ = utils.AppendHTML(template, p)
 	return html
 }
 

@@ -94,32 +94,30 @@ func (e *Exec) DoExec() {
 
 	// exec
 	logName := e.GetLogName()
+	e.Lock()
 	DoExecute(logName, e.Command)
+	e.Unlock()
 }
 
 // StartCron do schedule of Exec
 func (e *Exec) StartCron() {
-	// check
-	//if e.CronOP != CronStart || e.CronOP != CronEnd {
-	//return
-	//}
-	if e.Time == "" {
-		log.Fatalln("no time")
-	}
-
 	// start cron
+	e.Lock()
 	e.Cron = cron.New()
 	if _, err := e.Cron.AddFunc(e.Time, func() { e.DoExec() }); err != nil {
-		log.Fatalln(err)
+		e.WriteLogFunc(func(l *log.Logger){l.Fatalln(err)})
 	}
-	log.Println(e.Name + " cron start!")
+	e.WriteLog(e.Name + " cron start!")
 	e.Cron.Start()
+	e.Unlock()
 }
 
 // StopCron to stop job
 func (e *Exec) StopCron() {
+	e.Lock()
 	e.Cron.Stop()
-	log.Println(e.Name + " cron has stopped!")
+	e.Unlock()
+	e.WriteLog(e.Name + " cron has stopped!")
 }
 
 // DeleteLog to delete log
@@ -138,7 +136,6 @@ func DoExecute(logName string, command string) {
 	cmd := exec.Command(args[0], args[1:]...)
 	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
 
-	log.Println("do execute")
 	f, err := os.OpenFile(
 		logName,
 		os.O_RDWR|os.O_CREATE|os.O_APPEND,

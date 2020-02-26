@@ -18,6 +18,26 @@ func AppendHTML(template, pattern string) (string, error) {
 	return strings.Replace(template, symbol, pattern, 1), nil
 }
 
+// AppendObj append obj into html and return by string
+func AppendObj(body interface{}, name, pattern string) string {
+	t, err := ReadHTML(name)
+	CheckPanic(err)
+
+	p, err := ReplacePattern(pattern, body)
+	CheckPanic(err)
+
+	html, err := AppendHTML(t, p)
+	CheckPanic(err)
+	return html
+}
+
+// UpdatePage update html after append a obj
+func UpdatePage(body interface{}, name, pattern string) {
+	html := AppendObj(body, name, pattern)
+	err := SaveHTML(name, html)
+	CheckPanic(err)
+}
+
 // ReplaceHTML check replace template
 func ReplaceHTML(template string, num int, pattern string) (string, error) {
 	symbol := "{{{ " + strconv.Itoa(num) + " }}}"
@@ -52,4 +72,13 @@ func SaveHTML(name, html string) error {
 		return err
 	}
 	return nil
+}
+
+// ReadHTML read html file
+func ReadHTML(name string) (string,error) {
+	buf, err := ioutil.ReadFile(name)
+	if err != nil {
+		return "", err
+	}
+	return string(buf), nil
 }
