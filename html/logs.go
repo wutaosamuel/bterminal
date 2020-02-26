@@ -7,6 +7,7 @@ package html
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"../utils"
@@ -77,6 +78,28 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 	// Generate detail page here
 	// Or delete log
 	if req.Method == "POST" {
-		fmt.Println("need log action")
+		if !c.isToken(w, req) {
+			return
+		}
+		for key := range req.Form {
+		}
+	}
+}
+
+// logDetail read a log
+func (c *ConfigHTML) logDetail(key string) {
+	detail := c.setLogDetail(key)
+
+}
+
+// deleteLog delete a log
+func (c *ConfigHTML) deleteLog(key string) {
+	if key[:7] == "Delete-" {
+		c.Lock()
+		job := c.Jobs[key[7:]]
+		err := job.DeleteLog()
+		// TODO: need to improve delete into html
+		log.Println(err)
+		c.Unlock()
 	}
 }

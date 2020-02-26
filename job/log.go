@@ -17,21 +17,21 @@ type LogFunction interface {
 // WriteLog write into log
 func (e *Exec) WriteLog(logInfo string) {
 	e.Lock()
-	utils.WriteLog(e.Logger, e.LogPath, logInfo)
+	utils.WriteLog(e.Logger, e.LogName, logInfo)
 	e.Unlock()
 }
 
 // WriteLogFunc write log with func
 func (e *Exec) WriteLogFunc(logFunc utils.LogActCallback) {
 	e.Lock()
-	utils.WriteLogFunc(e.Logger, e.LogPath, logFunc)
+	utils.WriteLogFunc(e.Logger, e.LogName, logFunc)
 	e.Unlock()
 }
 
 // ReadLog read log
 func (e *Exec) ReadLog() (string, error) {
 	e.RLock()
-	str, err := utils.ReadLog(e.LogPath)
+	str, err := utils.ReadLog(e.LogName)
 	e.RUnlock()
 	return str, err
 }

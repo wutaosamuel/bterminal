@@ -6,7 +6,6 @@ package html
  */
 
 import (
-	"fmt"
 	"net/http"
 
 	"../utils"
@@ -59,7 +58,6 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 
 	// replease job html
 	html, _ := utils.ReplaceHTML(template, 1, p)
-	html, _ = utils.AppendHTML(template, p)
 	return html
 }
 
@@ -74,8 +72,25 @@ func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Read form
+	// stop a cron job
 	if req.Method == "POST" {
-		PrintHTMLInfo(req)
-		fmt.Println("need job action")
+		if !c.isToken(w, req) {
+			return
+		}
+		c.jobsAction(req)
+	}
+}
+
+// JobsAction do jobs action
+// general stop action
+func (c *ConfigHTML) jobsAction(req *http.Request) {
+	// read ID for stop
+	for key := range req.Form {
+		if key[:5] == "Stop-" {
+			c.Lock()
+			job := c.Jobs[key[5:]]
+			job.StopCron()
+			c.Unlock()
+		}
 	}
 }

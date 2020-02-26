@@ -55,6 +55,7 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	e.DoExec()
 	c.Lock()
 	c.JobID = append(c.JobID, e.GetNameID())
+	c.Jobs[e.GetNameID()] = *e
 	utils.UpdatePage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
 	c.Unlock()
 }
@@ -64,9 +65,10 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	e := c.setExec(name, command, crontab)
 	j := c.setJob(e)
 	l := c.setJobLog(e)
+	e.StartCron()
 	c.Lock()
 	c.JobID = append(c.JobID, e.GetNameID())
-	c.CronJobs[e.GetNameID()] = *e
+	c.Jobs[e.GetNameID()] = *e
 	utils.UpdatePage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
 	utils.UpdatePage(j, "./html/jobs.html", "./html/pattern/job_pattern1.html")
 	c.Unlock()

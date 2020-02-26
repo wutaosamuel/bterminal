@@ -13,13 +13,16 @@ import (
 )
 
 // ConfigHTML for HTML use
+// TODO: 
+// Improve save Jobs as file
+// Improve WR locker
 type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
 	Config   *conf.Config        // local config process
 	JobID    []string            // id for each job
-	CronJobs map[string]job.Exec // keep cron jobs
+	Jobs map[string]job.Exec // keep cron jobs
 }
 
 // NewConfigHTML create new one
@@ -135,7 +138,7 @@ func (c *ConfigHTML) setExec(name, command, crontab string) *job.Exec {
 	e := job.NewExecS()
 	e.Name = name
 	e.Command = command
-	e.LogPath = c.Config.LogDir
+	e.LogName = c.Config.LogDir
 	e.Time = crontab
 	e.Init()
 	return e
@@ -161,4 +164,16 @@ func (c *ConfigHTML) setJobLog(e *job.Exec) *JobLog {
 	jobLog.Crontab = e.Time
 	jobLog.Init()
 	return jobLog
+}
+
+// setLogDetail display log detail for every job
+func (c *ConfigHTML) setLogDetail(id string) *Detail {
+	d := NewDetail()
+	e := c.Jobs[id]
+	d.Name = e.Name
+	d.ID = e.GetNameID()
+	d.Command = e.Command
+	d.Crontab = e.Time
+	d.LogName = e.LogName
+	return d
 }

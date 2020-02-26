@@ -15,7 +15,7 @@ type Detail struct {
 	ID      string // job UUID
 	Command string // Command required to run
 	Crontab string // cron schedule
-	Log     string // log
+	LogName string // log
 }
 
 // NewDetail create new job
@@ -46,13 +46,12 @@ func GenerateDetail(details []Detail, template, pattern string) string {
 
 // HandleDetail handle detail action
 //func HandleDetail(w http.ResponseWriter, req *http.Request) {
-	//req.ParseForm()
-	//PrintHTMLInfo(req)
+//req.ParseForm()
+//PrintHTMLInfo(req)
 
-
-	//// Read form
-	//// TODO: do exec here
-	//if req.Method == "POST" {
-		//fmt.Println("need detail action")
-	//}
+//// Read form
+//// TODO: do exec here
+//if req.Method == "POST" {
+//fmt.Println("need detail action")
+//}
 //}

@@ -20,7 +20,7 @@ type Exec struct {
 	Name    string // the name of jobs
 	nameID  string // the unique ID for each job
 	Command string // command required to execute
-	LogPath string // log path
+	LogName string // log path/name.log
 
 	*sync.RWMutex             // Read & write lock
 	Logger        *log.Logger // logger for exec
@@ -47,7 +47,7 @@ func NewExec() *Exec {
 func (e *Exec) Init() error {
 	e.nameID = uuid.Must(uuid.NewV4()).String()
 	// set log path
-	e.SetLogPath()
+	e.SetLogName()
 	return nil
 }
 
@@ -56,15 +56,15 @@ func (e *Exec) SetCronTime(m string, h string, d string, mon string, w string) {
 	e.Time = m + " " + h + " " + d + " " + mon + " " + w
 }
 
-// SetLogPath set log path
-func (e *Exec) SetLogPath() {
+// SetLogName set log path
+func (e *Exec) SetLogName() {
 	// FIXME: path not exist
-	if len(e.LogPath) < 4 {
-		e.LogPath = path.Join(e.LogPath, e.GetLogName())
+	if len(e.LogName) < 4 {
+		e.LogName = path.Join(e.LogName, e.GetLogName())
 		return
 	}
-	if e.LogPath[len(e.LogPath)-4:] != ".log" {
-		e.LogPath = path.Join(e.LogPath, e.GetLogName())
+	if e.LogName[len(e.LogName)-4:] != ".log" {
+		e.LogName = path.Join(e.LogName, e.GetLogName())
 		return
 	}
 	return
@@ -77,7 +77,7 @@ func (e *Exec) GetNameID() string { return e.nameID }
 func (e *Exec) GetNameID8b() string { return e.nameID[:8] }
 
 // GetLogName get log name
-func (e *Exec) GetLogName() string { return e.Name + "_" + e.GetNameID8b() + ".log" }
+func (e *Exec) GetLogName() string { return e.Name + "_" + e.GetNameID() + ".log" }
 
 /////////////////// Main ///////////////////
 
