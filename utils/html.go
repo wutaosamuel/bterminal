@@ -7,9 +7,18 @@ import (
 	"strings"
 )
 
+// AppendHTML append content 
+// the symbol is <!-- {{{ }}} -->
+func AppendHTML(template, pattern string) (string, error) {
+	symbol := "<!-- {{{ }}} -->"
+	if !strings.Contains(template, symbol) {
+		return "", Err("Template do not contain " + symbol)
+	}
+	pattern = pattern+"\n"+symbol+"\n"
+	return strings.Replace(template, symbol, pattern, 1), nil
+}
+
 // ReplaceHTML check replace template
-// symbol maybe {{{num}}} || {{{ num }}}
-// or {{{ num}}} || {{{num }}}
 func ReplaceHTML(template string, num int, pattern string) (string, error) {
 	symbol := "{{{ " + strconv.Itoa(num) + " }}}"
 	if !strings.Contains(template, symbol) {

@@ -43,6 +43,7 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 		return html
 	}
 
+	// TODO: append job in html, not re-generate all jobs into html
 	// process pattern first
 	var p string
 	for _, job := range jobs {
@@ -52,6 +53,7 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 
 	// replease job html
 	html, _ := utils.ReplaceHTML(template, 1, p)
+	html, _ = utils.AppendHTML(template, p)
 	return html
 }
 

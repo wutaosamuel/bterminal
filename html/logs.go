@@ -52,6 +52,7 @@ func GenerateJobLogs(logs []JobLog, template, pattern string) string {
 
 	// replease job html
 	html, _ := utils.ReplaceHTML(template, 1, p)
+	html, _ = utils.AppendHTML(template, p)
 	return html
 }
 
