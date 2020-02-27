@@ -14,7 +14,7 @@ import (
 
 // ConfigHTML for HTML use
 // TODO:
-// Improve save Jobs as file
+// Improve save Jobs as file for restore jobs
 // Improve RW locker
 type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs

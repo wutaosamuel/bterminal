@@ -85,7 +85,7 @@ func (e *Exec) GetLogName() string { return e.Name + "_" + e.GetNameID() + ".log
 func (e *Exec) DoExec() {
 	// check
 	if e.Name == "" {
-		e.Name = "BackConsole-" + e.GetNameID8b()
+		e.Name = "BTerminal-" + e.GetNameID8b()
 	}
 	if e.Command == "" {
 		// do nothing
