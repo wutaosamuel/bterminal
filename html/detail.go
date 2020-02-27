@@ -24,34 +24,13 @@ func NewDetail() *Detail {
 }
 
 // GenerateDetail automatically generate
-func GenerateDetail(details []Detail, template, pattern string) string {
-	// if num of jobs is 0,
-	// replace {{{ 1 }}} and output template only
-	if len(details) == 0 {
-		html, _ := utils.ReplaceHTML(template, 1, "")
-		return html
-	}
-
+func (d *Detail) GenerateDetail(template, pattern string) (string, error) {
 	// process pattern first
-	var p string
-	for _, detail := range details {
-		tmp, _ := utils.ReplacePattern(pattern, detail)
-		p += tmp
+	p, err := utils.ReplacePattern(pattern, d)
+	if err != nil {
+		return "", err
 	}
 
 	// replease job html
-	html, _ := utils.ReplaceHTML(template, 1, p)
-	return html
+	return utils.ReplaceHTML(template, 1, p)
 }
-
-// HandleDetail handle detail action
-//func HandleDetail(w http.ResponseWriter, req *http.Request) {
-//req.ParseForm()
-//PrintHTMLInfo(req)
-
-//// Read form
-//// TODO: do exec here
-//if req.Method == "POST" {
-//fmt.Println("need detail action")
-//}
-//}

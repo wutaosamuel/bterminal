@@ -6,8 +6,8 @@ package html
  */
 
 import (
-	"fmt"
 	"log"
+	"fmt"
 	"net/http"
 
 	"../utils"
@@ -74,32 +74,45 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Read form
-	// TODO:
-	// Generate detail page here
-	// Or delete log
 	if req.Method == "POST" {
 		if !c.isToken(w, req) {
 			return
 		}
 		for key := range req.Form {
+			c.deleteLog(key)
+			c.logDetail(w, key)
 		}
 	}
 }
 
 // logDetail read a log
-func (c *ConfigHTML) logDetail(key string) {
-	detail := c.setLogDetail(key)
-
+func (c *ConfigHTML) logDetail(w http.ResponseWriter, key string) {
+	if key[:7] == "Detail-" {
+		detail := c.setLogDetail(key[7:])
+		c.RLock()
+		html, err := detail.GenerateDetail("./html/template/detail.html", "./html/pattern/detail_pattern1.html")
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Fprintf(w, html)
+		c.RUnlock()
+	}
 }
 
 // deleteLog delete a log
 func (c *ConfigHTML) deleteLog(key string) {
 	if key[:7] == "Delete-" {
 		c.Lock()
-		job := c.Jobs[key[7:]]
-		err := job.DeleteLog()
-		// TODO: need to improve delete into html
-		log.Println(err)
+		j := c.Jobs[key[7:]]
+		jobLog := c.setJobLog(&j)
+		if err := j.DeleteLog(); err != nil {
+			log.Println(err)
+		}
+		if err := utils.DeletePage(jobLog, "./html/logs.html", "./html/pattern/log_pattern1.html"); err != nil {
+			log.Println(err)
+		}
+		delete(c.JobID, j.GetNameID())
+		delete(c.Jobs, j.GetNameID())
 		c.Unlock()
 	}
 }

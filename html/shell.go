@@ -5,6 +5,7 @@ package html
  */
 
 import (
+	"log"
 	"net/http"
 
 	"../utils"
@@ -54,9 +55,13 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	l := c.setJobLog(e)
 	e.DoExec()
 	c.Lock()
-	c.JobID = append(c.JobID, e.GetNameID())
+	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
-	utils.UpdatePage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	// update logs.html
+	err := utils.AppendPage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	if err != nil {
+		log.Println(err)
+	}
 	c.Unlock()
 }
 
@@ -67,9 +72,16 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	l := c.setJobLog(e)
 	e.StartCron()
 	c.Lock()
-	c.JobID = append(c.JobID, e.GetNameID())
+	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
-	utils.UpdatePage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
-	utils.UpdatePage(j, "./html/jobs.html", "./html/pattern/job_pattern1.html")
+	// update logs.html and jobs.html
+	err := utils.AppendPage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	if err != nil {
+		log.Println(err)
+	}
+	err = utils.AppendPage(j, "./html/jobs.html", "./html/pattern/job_pattern1.html")
+	if err != nil {
+		log.Println(err)
+	}
 	c.Unlock()
 }

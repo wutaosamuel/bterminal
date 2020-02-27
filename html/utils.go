@@ -13,16 +13,16 @@ import (
 )
 
 // ConfigHTML for HTML use
-// TODO: 
+// TODO:
 // Improve save Jobs as file
-// Improve WR locker
+// Improve RW locker
 type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
-	Config   *conf.Config        // local config process
-	JobID    []string            // id for each job
-	Jobs map[string]job.Exec // keep cron jobs
+	Config *conf.Config        // local config process
+	JobID  map[string]int            // id for each job
+	Jobs   map[string]job.Exec // keep cron jobs
 }
 
 // NewConfigHTML create new one
@@ -31,7 +31,7 @@ func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 		&sync.RWMutex{},
 		utils.NewCookie(defaultExpiration),
 		conf.NewConfig(),
-		[]string{},
+		make(map[string]int),
 		make(map[string]job.Exec)}
 }
 

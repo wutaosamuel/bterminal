@@ -7,37 +7,6 @@ import (
 	"strings"
 )
 
-// AppendHTML append content 
-// the symbol is <!-- {{{ }}} -->
-func AppendHTML(template, pattern string) (string, error) {
-	symbol := "<!-- {{{ }}} -->"
-	if !strings.Contains(template, symbol) {
-		return "", Err("Template do not contain " + symbol)
-	}
-	pattern = pattern+"\n"+symbol+"\n"
-	return strings.Replace(template, symbol, pattern, 1), nil
-}
-
-// AppendObj append obj into html and return by string
-func AppendObj(body interface{}, name, pattern string) string {
-	t, err := ReadHTML(name)
-	CheckPanic(err)
-
-	p, err := ReplacePattern(pattern, body)
-	CheckPanic(err)
-
-	html, err := AppendHTML(t, p)
-	CheckPanic(err)
-	return html
-}
-
-// UpdatePage update html after append a obj
-func UpdatePage(body interface{}, name, pattern string) {
-	html := AppendObj(body, name, pattern)
-	err := SaveHTML(name, html)
-	CheckPanic(err)
-}
-
 // ReplaceHTML check replace template
 func ReplaceHTML(template string, num int, pattern string) (string, error) {
 	symbol := "{{{ " + strconv.Itoa(num) + " }}}"
@@ -64,6 +33,81 @@ func ReplacePattern(pattern string, body interface{}) (string, error) {
 		}
 	}
 	return p, nil
+}
+
+// AppendHTML append content 
+// the symbol is <!-- {{{ }}} -->
+func AppendHTML(template, pattern string) (string, error) {
+	symbol := "<!-- {{{ }}} -->"
+	if !strings.Contains(template, symbol) {
+		return "", Err("Template do not contain " + symbol)
+	}
+	pattern = pattern+"\n"+symbol+"\n"
+	return strings.Replace(template, symbol, pattern, 1), nil
+}
+
+// AppendObj append obj into html and return by string
+func AppendObj(body interface{}, name, pattern string) (string, error) {
+	t, err := ReadHTML(name)
+	if err != nil {
+		return "", err
+	}
+
+	p, err := ReplacePattern(pattern, body)
+	if err != nil {
+		return "", err
+	}
+
+	html, err := AppendHTML(t, p)
+	if err != nil {
+		return "", err
+	}
+	return html, nil
+}
+
+// AppendPage update html after append a obj
+func AppendPage(body interface{}, name, pattern string) error {
+	html, err := AppendObj(body, name, pattern)
+	if err != nil {
+		return err
+	}
+	return SaveHTML(name, html)
+}
+
+// DeleteHTML delete obj by pattern to string
+func DeleteHTML(template, pattern string) (string, error) {
+	if !strings.Contains(template, pattern) {
+		return "", Err("Page do not contain the object")
+	}
+	return strings.Replace(template, pattern, "", 1), nil
+}
+
+// DeleteObj delete a struct obj by pattern to string
+func DeleteObj(body interface{}, name, pattern string) (string, error) {
+	t, err := ReadHTML(name)
+	if err != nil {
+		return "", err
+	}
+
+	p, err := ReplacePattern(pattern, body)
+	if err != nil {
+		return "", err
+	}
+
+	html, err := DeleteHTML(t, p)
+	if err != nil {
+		return "", err
+	}
+	return html, nil
+}
+
+// DeletePage delete a obj in html
+func DeletePage(body interface{}, name, pattern string) error {
+	html, err := DeleteObj(body, name, pattern)
+	if err != nil {
+		return err
+	}
+	return SaveHTML(name, html)
 }
 
 // SaveHTML save html file from string
