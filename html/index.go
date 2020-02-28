@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
+	"path/filepath"
 )
 
 // HandleIndex is process functions of index.html
@@ -25,7 +26,7 @@ func (c *ConfigHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	c.setToken(w)
-	http.ServeFile(w, req, "html/index.html")
+	http.ServeFile(w, req, filepath.Join(c.AppPath, "html", "index.html"))
 
 	// Form will require by POST
 	// check token, only allow to submit form once

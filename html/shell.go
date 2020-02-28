@@ -7,6 +7,7 @@ package html
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 
 	"../utils"
 )
@@ -19,7 +20,7 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 	PrintHTMLInfo(req)
 
 	// authentication is login
-	if !c.authentication(w, req, "/html/shell.html") {
+	if !c.authentication(w, req, "shell.html") {
 		return
 	}
 
@@ -34,7 +35,7 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		// command needed
 		if command == "" {
 			// TODO: display info
-			http.Redirect(w, req, "/html/shell.html", http.StatusNotModified)
+			http.Redirect(w, req, "/shell.html", http.StatusNotModified)
 			return
 		}
 		// do exec then generate log html
@@ -58,7 +59,9 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
 	// update logs.html
-	err := utils.AppendPage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	err := utils.AppendPage(l,
+		filepath.Join(c.AppPath, "html", "logs.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
 	if err != nil {
 		log.Println(err)
 	}
@@ -75,11 +78,15 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
 	// update logs.html and jobs.html
-	err := utils.AppendPage(l, "./html/logs.html", "./html/pattern/log_pattern1.html")
+	err := utils.AppendPage(l,
+		filepath.Join(c.AppPath, "html", "logs.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
 	if err != nil {
 		log.Println(err)
 	}
-	err = utils.AppendPage(j, "./html/jobs.html", "./html/pattern/job_pattern1.html")
+	err = utils.AppendPage(j,
+		filepath.Join(c.AppPath, "html", "jobs.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
 	if err != nil {
 		log.Println(err)
 	}

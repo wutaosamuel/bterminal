@@ -67,7 +67,7 @@ func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 	PrintHTMLInfo(req)
 
 	// authentication is login
-	if !c.authentication(w, req, "/html/jobs.html") {
+	if !c.authentication(w, req, "jobs.html") {
 		return
 	}
 

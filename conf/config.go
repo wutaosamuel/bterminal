@@ -11,9 +11,6 @@ import (
 )
 
 // Config contain settings
-// TODO:
-// Pass value by cli
-// Pass logpath to job.exec
 type Config struct {
 	Path     string
 	Port     string
@@ -28,7 +25,7 @@ func NewConfig() *Config {
 	return &Config{}
 }
 
-// ConfigInit to check config
+// Init to check config
 func (c *Config) Init() {
 	if c.Path != "" {
 		c.SetPath(c.Path)

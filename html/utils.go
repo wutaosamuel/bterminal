@@ -3,6 +3,7 @@ package html
 import (
 	"fmt"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -20,9 +21,10 @@ type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
-	Config *conf.Config        // local config process
-	JobID  map[string]int            // id for each job
-	Jobs   map[string]job.Exec // keep cron jobs
+	AppPath string              // set AppPath for read html file in ./bterminal/html
+	Config  *conf.Config        // local config process
+	JobID   map[string]int      // id for each job
+	Jobs    map[string]job.Exec // keep cron jobs
 }
 
 // NewConfigHTML create new one
@@ -30,6 +32,7 @@ func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 	return &ConfigHTML{
 		&sync.RWMutex{},
 		utils.NewCookie(defaultExpiration),
+		"",
 		conf.NewConfig(),
 		make(map[string]int),
 		make(map[string]job.Exec)}
@@ -44,6 +47,25 @@ func (c *ConfigHTML) ConfigHTMLInit() *ConfigHTML {
 }
 
 /////////////////// Public ////////////////
+
+// Start setting up html
+// generate html file
+// jobs.html & logs.html
+func (c *ConfigHTML) Start() {
+	var jobs []Job
+	var jobLogs []JobLog
+	for _, e := range c.Jobs {
+		jobs = append(jobs, *c.setJob(&e))
+		jobLogs = append(jobLogs, *c.setJobLog(&e))
+	}
+
+	GenerateJobs(jobs,
+		filepath.Join(c.AppPath, "html", "template", "jobs.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
+	GenerateJobLogs(jobLogs,
+		filepath.Join(c.AppPath, "html", "template", "logs.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
+}
 
 // PrintHTMLInfo infomation
 func PrintHTMLInfo(req *http.Request) {
@@ -62,13 +84,13 @@ func FormToString(req *http.Request, attribute string) string {
 
 // authentication check security
 // not working on index page
-func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, html string) bool {
+func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, name string) bool {
 	if !c.isLogIn(req) {
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return false
 	}
 	c.setToken(w)
-	http.ServeFile(w, req, html)
+	http.ServeFile(w, req, filepath.Join(c.AppPath, "html", name))
 	return true
 }
 
