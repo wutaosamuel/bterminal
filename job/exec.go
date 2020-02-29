@@ -130,13 +130,16 @@ func (e *Exec) StartCron() {
 func (e *Exec) StopCron() {
 	e.Lock()
 	e.Cron.Stop()
-	e.Unlock()
 	e.WriteLog(e.Name + " cron has stopped!")
+	e.Unlock()
 }
 
 // DeleteLog to delete log
 func (e *Exec) DeleteLog() error {
-	return os.RemoveAll(e.LogName)
+	e.Lock()
+	err := os.RemoveAll(e.LogName)
+	e.Unlock()
+	return err
 }
 
 // DoExecute execute command and log recording

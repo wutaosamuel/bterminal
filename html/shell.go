@@ -47,7 +47,6 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		// TODO: display info
 		if crontab == "" {
 			c.execAction(name, command, crontab)
-			fmt.Println("exec done")
 			http.Redirect(w, req, "/logs.html", http.StatusSeeOther)
 		}
 		// do cron then generate job & log
@@ -64,7 +63,7 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	fmt.Println("start execAction")
 	e := c.setExec(name, command, crontab)
 	l := c.setJobLog(e)
-	e.DoExec()
+	go e.DoExec()
 	c.Lock()
 	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
@@ -86,7 +85,7 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	e := c.setExec(name, command, crontab)
 	j := c.setJob(e)
 	l := c.setJobLog(e)
-	e.StartCron()
+	go e.StartCron()
 	c.Lock()
 	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e

@@ -85,8 +85,14 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		for key := range req.Form {
-			c.deleteLog(key)
-			c.logDetail(w, key)
+			fmt.Println(key)
+			if key[:7] == "Delete-" {
+				c.deleteLog(key)
+				http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
+			}
+			if key[:7] == "Detail-" {
+				c.logDetail(w, key)
+			}
 		}
 	}
 	return
@@ -94,42 +100,38 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 
 // logDetail read a log
 func (c *ConfigHTML) logDetail(w http.ResponseWriter, key string) {
-	if key[:7] == "Detail-" {
-		j := c.Jobs[key[7:]]
-		detail, err := c.setLogDetail(key[7:])
-		if err != nil {
-			j.WriteLog(j)
-		}
-		c.RLock()
-		html, err := detail.GenerateDetail(
-			filepath.Join(c.AppPath, "html", "template", "detail.html"),
-			filepath.Join(c.AppPath, "html", "pattern", "detail_pattern1.html"))
-		if err != nil {
-			j.WriteLog(j)
-		}
-		fmt.Fprintf(w, html)
-		c.RUnlock()
+	j := c.Jobs[key[7:]]
+	detail, err := c.setLogDetail(key[7:])
+	if err != nil {
+		j.WriteLog(j)
 	}
+	c.RLock()
+	html, err := detail.GenerateDetail(
+		filepath.Join(c.AppPath, "html", "template", "detail.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "detail_pattern1.html"))
+	if err != nil {
+		j.WriteLog(j)
+	}
+	fmt.Fprintf(w, html)
+	c.RUnlock()
 }
 
 // deleteLog delete a log
 func (c *ConfigHTML) deleteLog(key string) {
-	if key[:7] == "Delete-" {
-		c.Lock()
-		j := c.Jobs[key[7:]]
-		jobLog := c.setJobLog(&j)
-		if err := j.DeleteLog(); err != nil {
-			j.WriteLog(err)
-		}
-		err := utils.DeletePage(
-			jobLog,
-			filepath.Join(c.AppPath, "html", "logs.html"),
-			filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
-		if err != nil {
-			j.WriteLog(err)
-		}
-		delete(c.JobID, j.GetNameID())
-		delete(c.Jobs, j.GetNameID())
-		c.Unlock()
+	c.Lock()
+	j := c.Jobs[key[7:]]
+	jobLog := c.setJobLog(&j)
+	if err := j.DeleteLog(); err != nil {
+		j.WriteLog(err)
 	}
+	err := utils.DeletePage(
+		jobLog,
+		filepath.Join(c.AppPath, "html", "logs.html"),
+		filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
+	if err != nil {
+		j.WriteLog(err)
+	}
+	delete(c.JobID, j.GetNameID())
+	delete(c.Jobs, j.GetNameID())
+	c.Unlock()
 }
