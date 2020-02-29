@@ -45,22 +45,26 @@ func (l *JobLog) SetID(i string) {
 // if logs.html is not at html directory
 // or force replace logs.html
 func GenerateJobLogs(logs []JobLog, template, pattern string) string {
+	templateS, err := utils.ReadHTML(template)
+	utils.CheckPanic(err)
+	patternS, err := utils.ReadHTML(pattern)
+	utils.CheckPanic(err)
 	// if num of jobs is 0,
 	// replace {{{ 1 }}} and output template only
 	if len(logs) == 0 {
-		html, _ := utils.ReplaceHTML(template, 1, "")
+		html, _ := utils.ReplaceHTML(templateS, 1, "")
 		return html
 	}
 
 	// process pattern first
 	var p string
 	for _, l := range logs {
-		tmp, _ := utils.ReplacePattern(pattern, l)
+		tmp, _ := utils.ReplacePattern(patternS, l)
 		p += tmp
 	}
 
 	// replease job html
-	html, _ := utils.ReplaceHTML(template, 1, p)
+	html, _ := utils.ReplaceHTML(templateS, 1, p)
 	return html
 }
 
@@ -70,8 +74,10 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 	PrintHTMLInfo(req)
 
 	// authentication is login
-	if !c.authentication(w, req, "logs.html") {
-		return
+	if req.Method == "GET" {
+		if !c.authentication(w, req, "logs.html") {
+			return
+		}
 	}
 
 	// Read form
@@ -84,6 +90,7 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 			c.logDetail(w, key)
 		}
 	}
+	return
 }
 
 // logDetail read a log
@@ -112,7 +119,7 @@ func (c *ConfigHTML) deleteLog(key string) {
 			log.Println(err)
 		}
 		if err := utils.DeletePage(
-			jobLog,
+			&jobLog,
 			filepath.Join(c.AppPath, "html", "logs.html"),
 			filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html")); err != nil {
 			log.Println(err)

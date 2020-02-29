@@ -44,28 +44,33 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
   <!-- add empty-->
   <div class="w3-container w3-padding-32">
   </div>
-  <!-- Command bar -->
-  <div class="w3-container w3-padding-32 w3-light-grey w3-margin w3-round-large">
-    <form class="w3-container" method="POST">
-    <div class="w3-container w3-green">
-      <h1>Terminal</h1>
-    </div>
-      <p>
-        <a>Job name:</a>
-        <input class="w3-input w3-border" name="name" type="text" placeholder="Name" style="width:100%">
-      </p>
-      <p>
-        <label>Command (e.g.  /bin/ls -l):</label>
-        <input class="w3-input w3-border" name="command" type="text" placeholder="Enter Yor Command" style="width:100%">
-      </p>
-      <p>
-        <label>Set cron-like schedule (e.g. */3 * * * *):</label>
-        <input class = "w3-input w3-border" name="crontab" type="text" placeholder="cron-like times" style="width:100%">
-        <label>Run immediate with no time. Pls, be careful of space</label>
-      </p>
-      <button type="submit" class="w3-button w3-red w3-margin-bottom">Run</button>
-    </form>
+  <!-- title of jobs-->
+  <div class="w3-container w3-border-bottom w3-padding-16">
+    <h1>Logs</h1>
   </div>
+
+  <!-- log template here -->
+  
+  <div class="w3-container w3-padding-16 w3-light-grey w3-margin w3-round-large">
+  <form class="w3-container" method="POST">
+    <div class="w3-container w3-green">
+      <!-- Jobs name here -->
+      <h4>ceshi</h4>
+      <!-- Jobs id here -->
+      <a>77fd0ae2-6444-4ba1-a548-fae3cee1fe08</a>
+    </div>
+    <!-- Command @ crontab -->
+    <p><a class="w3-border-bottom">ls -al</a></p>
+    <p><a></a></p>
+    <!-- detail-job_id -->
+    <button type="submit" name="Detail-77fd0ae2-6444-4ba1-a548-fae3cee1fe08" class="w3-button w3-red w3-margin-bottom w3-right">Detail</button>
+    <!-- delete-job-id -->
+    <button type="submit" name="Delete-77fd0ae2-6444-4ba1-a548-fae3cee1fe08" class="w3-button w3-red w3-margin-bottom w3-left">Delete</button>
+  </form>
+</div>
+
+<!-- {{{ 0 }}} -->
+
   
 <script>
 // Accordion 

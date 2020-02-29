@@ -25,12 +25,20 @@ func NewDetail() *Detail {
 
 // GenerateDetail automatically generate
 func (d *Detail) GenerateDetail(template, pattern string) (string, error) {
+	templateS, err := utils.ReadHTML(template)
+	if err != nil {
+		return templateS, err
+	}
+	patternS, err := utils.ReadHTML(pattern)
+	if err != nil {
+		return templateS, err
+	}
 	// process pattern first
-	p, err := utils.ReplacePattern(pattern, d)
+	p, err := utils.ReplacePattern(patternS, d)
 	if err != nil {
 		return "", err
 	}
 
 	// replease job html
-	return utils.ReplaceHTML(template, 1, p)
+	return utils.ReplaceHTML(templateS, 1, p)
 }

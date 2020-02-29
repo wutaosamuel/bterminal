@@ -35,29 +35,33 @@ func (j *Job) Init() {
 // SetID set id and button
 func (j *Job) SetID(i string) {
 	j.ID = i
-	j.Stop = "Stop-"+i
+	j.Stop = "Stop-" + i
 }
 
 // GenerateJobs automatically generate
 // if jobs.html is not at html directory
 // or force replace jobs.html
 func GenerateJobs(jobs []Job, template, pattern string) string {
+	templateS, err := utils.ReadHTML(template)
+	utils.CheckPanic(err)
+	patternS, err := utils.ReadHTML(pattern)
+	utils.CheckPanic(err)
 	// if num of jobs is 0,
 	// replace {{{ 1 }}} and output template only
 	if len(jobs) == 0 {
-		html, _ := utils.ReplaceHTML(template, 1, "")
+		html, _ := utils.ReplaceHTML(templateS, 1, "")
 		return html
 	}
 
 	// process pattern first
 	var p string
 	for _, job := range jobs {
-		tmp, _ := utils.ReplacePattern(pattern, job)
+		tmp, _ := utils.ReplacePattern(patternS, job)
 		p += tmp
 	}
 
 	// replease job html
-	html, _ := utils.ReplaceHTML(template, 1, p)
+	html, _ := utils.ReplaceHTML(templateS, 1, p)
 	return html
 }
 
@@ -67,8 +71,10 @@ func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 	PrintHTMLInfo(req)
 
 	// authentication is login
-	if !c.authentication(w, req, "jobs.html") {
-		return
+	if req.Method == "GET" {
+		if !c.authentication(w, req, "jobs.html") {
+			return
+		}
 	}
 
 	// Read form
@@ -79,6 +85,7 @@ func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 		}
 		c.jobsAction(req)
 	}
+	return
 }
 
 // JobsAction do jobs action

@@ -19,46 +19,54 @@ func ReplaceHTML(template string, num int, pattern string) (string, error) {
 // ReplacePattern replace {{{ num }}} in pattern by struct
 func ReplacePattern(pattern string, body interface{}) (string, error) {
 	var p string
-	t := reflect.TypeOf(body)
-	if t.Kind() != reflect.Struct {
+	b := reflect.ValueOf(body)
+	for b.Kind() == reflect.Ptr || b.Kind() == reflect.Interface {
+		b = b.Elem()
+	}
+	if b.Kind() != reflect.Struct {
 		return "", Err("ReplacePattern not valid type")
 	}
-	v := reflect.ValueOf(body)
-	for i := 0; i < v.NumField(); i++ {
+	for i := 0; i < b.NumField(); i++ {
 		if i == 0 {
-			p, _ = ReplaceHTML(pattern, i+1, v.Field(i).String())
+			p, _ = ReplaceHTML(pattern, i+1, b.Field(i).String())
 		}
 		if i != 0 {
-			p, _ = ReplaceHTML(p, i+1, v.Field(i).String())
+			p, _ = ReplaceHTML(p, i+1, b.Field(i).String())
 		}
 	}
 	return p, nil
 }
 
-// AppendHTML append content 
+// AppendHTML append content
 // the symbol is <!-- {{{ }}} -->
 func AppendHTML(template, pattern string) (string, error) {
-	symbol := "<!-- {{{ }}} -->"
+	symbol := "<!-- {{{ 0 }}} -->"
 	if !strings.Contains(template, symbol) {
 		return "", Err("Template do not contain " + symbol)
 	}
-	pattern = pattern+"\n"+symbol+"\n"
+	pattern = pattern + "\n" + symbol + "\n"
 	return strings.Replace(template, symbol, pattern, 1), nil
 }
 
 // AppendObj append obj into html and return by string
 func AppendObj(body interface{}, name, pattern string) (string, error) {
-	t, err := ReadHTML(name)
+	// read html && pattern
+	h, err := ReadHTML(name)
+	if err != nil {
+		return "", err
+	}
+	p, err := ReadHTML(pattern)
 	if err != nil {
 		return "", err
 	}
 
-	p, err := ReplacePattern(pattern, body)
+	// replace pattern by obj
+	rp, err := ReplacePattern(p, body)
 	if err != nil {
 		return "", err
 	}
-
-	html, err := AppendHTML(t, p)
+	// append into html
+	html, err := AppendHTML(h, rp)
 	if err != nil {
 		return "", err
 	}
@@ -84,17 +92,21 @@ func DeleteHTML(template, pattern string) (string, error) {
 
 // DeleteObj delete a struct obj by pattern to string
 func DeleteObj(body interface{}, name, pattern string) (string, error) {
-	t, err := ReadHTML(name)
+	h, err := ReadHTML(name)
+	if err != nil {
+		return "", err
+	}
+	p, err := ReadHTML(pattern)
 	if err != nil {
 		return "", err
 	}
 
-	p, err := ReplacePattern(pattern, body)
+	rp, err := ReplacePattern(p, body)
 	if err != nil {
 		return "", err
 	}
 
-	html, err := DeleteHTML(t, p)
+	html, err := DeleteHTML(h, rp)
 	if err != nil {
 		return "", err
 	}
@@ -119,7 +131,7 @@ func SaveHTML(name, html string) error {
 }
 
 // ReadHTML read html file
-func ReadHTML(name string) (string,error) {
+func ReadHTML(name string) (string, error) {
 	buf, err := ioutil.ReadFile(name)
 	if err != nil {
 		return "", err

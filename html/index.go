@@ -21,12 +21,19 @@ func (c *ConfigHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
 	// check user if is login
 	// redirect to shell.html
 	// if not, serve html/index.html
-	if c.isLogIn(req) || c.Config.Password == "" {
-		http.Redirect(w, req, "/shell.html", http.StatusFound)
-		return
+	if req.Method == "GET" {
+		if c.Config.Password == "" {
+			c.setSession(w)
+			http.Redirect(w, req, "/shell.html", http.StatusFound)
+			return
+		}
+		if c.isLogIn(req) {
+			http.Redirect(w, req, "/shell.html", http.StatusFound)
+			return
+		}
+		c.setToken(w)
+		http.ServeFile(w, req, filepath.Join(c.AppPath, "html", "index.html"))
 	}
-	c.setToken(w)
-	http.ServeFile(w, req, filepath.Join(c.AppPath, "html", "index.html"))
 
 	// Form will require by POST
 	// check token, only allow to submit form once
@@ -38,10 +45,12 @@ func (c *ConfigHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
 		fmt.Println(string(password))
 		if string(password) != c.Config.Password {
 			// TODO: display password error info
-			http.Redirect(w, req, "/shell.html", http.StatusFound)
+			http.Redirect(w, req, "/", http.StatusFound)
+			return
 		}
 		// set session to user
 		c.setSession(w)
 		http.Redirect(w, req, "/shell.html", http.StatusFound)
 	}
+	return
 }

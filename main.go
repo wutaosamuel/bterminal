@@ -12,13 +12,13 @@ import (
 )
 
 // Main func for bterminal
+// TODO: log dir path should depend on system
 func Main(config *conf.Config, appPath string) {
 	// set default(cmd prefer), when there is no value
 	// if path is nil, no file to load
 	// if port is nil, port is 5122
 	// if password is nil, no password needed
 	// if LogDir is nil, save log into local dir
-	// TODO: log dir path should depend on system
 	fmt.Println("start")
 	c := conf.NewConfig()
 	if config.Path != "" {
@@ -42,11 +42,8 @@ func Main(config *conf.Config, appPath string) {
 			config.LogDir = c.LogDir
 		}
 		if c.LogDir == "" {
-			if err := os.MkdirAll("log", os.ModePerm); err != nil {
-				panic(err)
-			}
-			logDir, err := filepath.Abs("log")
-			if err != nil {
+			logDir := filepath.Join(appPath, "log")
+			if err := os.MkdirAll(logDir, os.ModePerm); err != nil {
 				panic(err)
 			}
 			config.LogDir = logDir
@@ -70,6 +67,7 @@ func Main(config *conf.Config, appPath string) {
 	// set static assert
 	fmt.Println("start web service")
 	http.Handle("/CSS/", http.StripPrefix("/CSS/", http.FileServer(http.Dir(filepath.Join(appPath, "html", "CSS")))))
+	http.Handle("/favicon.ico", http.FileServer(http.Dir(filepath.Join(appPath, "html", "image", "favicon.png"))))
 	// hand func
 	http.HandleFunc("/", configHTML.HandleIndex)
 	http.HandleFunc("/shell.html", configHTML.HandleShell)

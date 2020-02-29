@@ -60,7 +60,11 @@ func (c *Config) SetPort(port string) {
 }
 
 // SetLogDir set log path
+// if no dir path, it will set default at app/log directory
 func (c *Config) SetLogDir(dir string) {
+	if dir == "" {
+		return
+	}
 	isDir, err := utils.IsDir(dir)
 	if err != nil {
 		panic(utils.Errs("Set LogDir Error: ", err))

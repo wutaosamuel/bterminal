@@ -27,10 +27,10 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     </div>
       <p>
         <label>Password:</label>
-        <input class="w3-input w3-border" id="passwordID" type="password" placeholder="Password" style="width:100%">
+        <input class="w3-input w3-border" id="passwordID" type="password" onkeypress="return enterPress(event)" placeholder="Password" style="width:100%">
       </p>
       <p id="passwordRst"></p>
-      <button type="button" onclick="sendPassEn()" class="w3-button w3-red w3-margin-bottom w3-right">Confirm</button>
+      <button type="button" id="SendPass" onclick="sendPassEn()" class="w3-button w3-red w3-margin-bottom w3-right">Confirm</button>
     </form>
   </div>
 
@@ -51,6 +51,16 @@ function sendPassEn(){
   form.submit()
   //document.getElementById("passwordRst").innerHTML = input.value
   document.body.removeChild(form)
+}
+
+function enterPress(e) {
+  e = e || window.event
+  if (e.keyCode == 13)
+  {
+    document.getElementById("SendPass").click()
+    return false
+  }
+  return true
 }
 
 </script>

@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -34,13 +34,29 @@ type Exec struct {
 // NewExecS create a new Exec struct
 // Init required after create a new Exec
 func NewExecS() *Exec {
-	return &Exec{}
+	return &Exec{
+		"",
+		"",
+		"",
+		"",
+		&sync.RWMutex{},
+		&log.Logger{},
+		cron.New(),
+		""}
 }
 
 // NewExec create a new Exec struct
 func NewExec() *Exec {
 	uuid := uuid.Must(uuid.NewV4()).String()
-	return &Exec{nameID: uuid}
+	return &Exec{
+		uuid,
+		"",
+		"",
+		"",
+		&sync.RWMutex{},
+		&log.Logger{},
+		cron.New(),
+		""}
 }
 
 // Init init exec
@@ -58,13 +74,12 @@ func (e *Exec) SetCronTime(m string, h string, d string, mon string, w string) {
 
 // SetLogName set log path
 func (e *Exec) SetLogName() {
-	// FIXME: path not exist
 	if len(e.LogName) < 4 {
-		e.LogName = path.Join(e.LogName, e.GetLogName())
+		e.LogName = filepath.Join(e.LogName, e.CreateLogName())
 		return
 	}
 	if e.LogName[len(e.LogName)-4:] != ".log" {
-		e.LogName = path.Join(e.LogName, e.GetLogName())
+		e.LogName = filepath.Join(e.LogName, e.CreateLogName())
 		return
 	}
 	return
@@ -76,10 +91,10 @@ func (e *Exec) GetNameID() string { return e.nameID }
 // GetNameID8b get the first 8 bits uuid string
 func (e *Exec) GetNameID8b() string { return e.nameID[:8] }
 
-// GetLogName get log name
-func (e *Exec) GetLogName() string { return e.Name + "_" + e.GetNameID() + ".log" }
-
 /////////////////// Main ///////////////////
+
+// CreateLogName get log name
+func (e *Exec) CreateLogName() string { return e.Name + "_" + e.GetNameID() + ".log" }
 
 // DoExec execute with Exec struct
 func (e *Exec) DoExec() {
@@ -93,9 +108,8 @@ func (e *Exec) DoExec() {
 	}
 
 	// exec
-	logName := e.GetLogName()
 	e.Lock()
-	DoExecute(logName, e.Command)
+	DoExecute(e.LogName, e.Command)
 	e.Unlock()
 }
 
@@ -122,8 +136,7 @@ func (e *Exec) StopCron() {
 
 // DeleteLog to delete log
 func (e *Exec) DeleteLog() error {
-	logName := e.GetLogName()
-	return os.RemoveAll(logName)
+	return os.RemoveAll(e.LogName)
 }
 
 // DoExecute execute command and log recording

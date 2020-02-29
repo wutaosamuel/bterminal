@@ -13,7 +13,8 @@ A fake web/software console for executing commands
 - log files && display
 - cron scheduler
 - sequential execution on commands that will be executed
-  - `graphical arrangement`
+  - `graphical insert command & time`
+  - `graphical manage job connection`
 
 ### Others
 

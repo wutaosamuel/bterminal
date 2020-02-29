@@ -59,12 +59,24 @@ func (c *ConfigHTML) Start() {
 		jobLogs = append(jobLogs, *c.setJobLog(&e))
 	}
 
-	GenerateJobs(jobs,
+	// jobs.html
+	jobsHTML := GenerateJobs(
+		jobs,
 		filepath.Join(c.AppPath, "html", "template", "jobs.html"),
 		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
-	GenerateJobLogs(jobLogs,
+	err := utils.SaveHTML(
+		filepath.Join(c.AppPath, "html", "jobs.html"),
+		jobsHTML)
+	utils.CheckPanic(err)
+	// jobLogs.html
+	jobLogsHTML := GenerateJobLogs(
+		jobLogs,
 		filepath.Join(c.AppPath, "html", "template", "logs.html"),
-		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
+		filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
+	err = utils.SaveHTML(
+		filepath.Join(c.AppPath, "html", "logs.html"),
+		jobLogsHTML)
+	utils.CheckPanic(err)
 }
 
 // PrintHTMLInfo infomation
