@@ -7,7 +7,6 @@ package html
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"path/filepath"
 
@@ -96,13 +95,17 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 // logDetail read a log
 func (c *ConfigHTML) logDetail(w http.ResponseWriter, key string) {
 	if key[:7] == "Detail-" {
-		detail := c.setLogDetail(key[7:])
+		j := c.Jobs[key[7:]]
+		detail, err := c.setLogDetail(key[7:])
+		if err != nil {
+			j.WriteLog(j)
+		}
 		c.RLock()
 		html, err := detail.GenerateDetail(
 			filepath.Join(c.AppPath, "html", "template", "detail.html"),
 			filepath.Join(c.AppPath, "html", "pattern", "detail_pattern1.html"))
 		if err != nil {
-			log.Println(err)
+			j.WriteLog(j)
 		}
 		fmt.Fprintf(w, html)
 		c.RUnlock()
@@ -116,13 +119,14 @@ func (c *ConfigHTML) deleteLog(key string) {
 		j := c.Jobs[key[7:]]
 		jobLog := c.setJobLog(&j)
 		if err := j.DeleteLog(); err != nil {
-			log.Println(err)
+			j.WriteLog(err)
 		}
-		if err := utils.DeletePage(
-			&jobLog,
+		err := utils.DeletePage(
+			jobLog,
 			filepath.Join(c.AppPath, "html", "logs.html"),
-			filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html")); err != nil {
-			log.Println(err)
+			filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
+		if err != nil {
+			j.WriteLog(err)
 		}
 		delete(c.JobID, j.GetNameID())
 		delete(c.Jobs, j.GetNameID())

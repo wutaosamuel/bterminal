@@ -26,7 +26,7 @@ type LogActCallback func(*log.Logger)
 
 // WriteLog write into log
 // Println only
-func WriteLog(logger *log.Logger, logName, logInfo string) {
+func WriteLog(logger *log.Logger, logName string, logInfo interface{}) {
 	// open log file
 	logger.SetFlags(log.Ldate | log.Ltime | log.LUTC)
 	f, err := os.OpenFile(

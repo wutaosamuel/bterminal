@@ -15,7 +15,7 @@ type Detail struct {
 	ID      string // job UUID
 	Command string // Command required to run
 	Crontab string // cron schedule
-	LogName string // log
+	Log string // log
 }
 
 // NewDetail create new job

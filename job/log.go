@@ -1,6 +1,9 @@
 package job
 
 import (
+	"os"
+	"log"
+
 	"../utils"
 )
 
@@ -14,18 +17,33 @@ type LogFunction interface {
 	ReadLog()
 }
 
+// LogActCallback for log call back
+type LogActCallback func(*log.Logger)
+
 // WriteLog write into log
-func (e *Exec) WriteLog(logInfo string) {
+func (e *Exec) WriteLog(logInfo interface{}) {
 	e.Lock()
 	utils.WriteLog(e.Logger, e.LogName, logInfo)
 	e.Unlock()
+	return
 }
 
-// WriteLogFunc write log with func
-func (e *Exec) WriteLogFunc(logFunc utils.LogActCallback) {
+// WriteLogFunc write into log by func
+func (e *Exec) WriteLogFunc(logFunc LogActCallback) {
 	e.Lock()
-	utils.WriteLogFunc(e.Logger, e.LogName, logFunc)
+	// open log file
+	f, err := os.OpenFile(
+		e.LogName,
+		os.O_RDWR|os.O_CREATE|os.O_APPEND,
+		0666)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	e.Logger = log.New(f, "", log.Ldate|log.Ltime|log.LUTC)
+	logFunc(e.Logger)
 	e.Unlock()
+	return
 }
 
 // ReadLog read log

@@ -5,7 +5,6 @@ package html
  */
 
 import (
-	"log"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -72,11 +71,11 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	// update logs.html
 	fmt.Println("append page")
 	err := utils.AppendPage(
-		&l,
+		l,
 		filepath.Join(c.AppPath, "html", "logs.html"),
 		filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
 	if err != nil {
-		log.Println(err)
+		e.WriteLog(err)
 	}
 	c.Unlock()
 	fmt.Println("done")
@@ -97,14 +96,14 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 		filepath.Join(c.AppPath, "html", "logs.html"),
 		filepath.Join(c.AppPath, "html", "pattern", "log_pattern1.html"))
 	if err != nil {
-		log.Println(err)
+		e.WriteLog(err)
 	}
 	err = utils.AppendPage(
 		j,
 		filepath.Join(c.AppPath, "html", "jobs.html"),
 		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
 	if err != nil {
-		log.Println(err)
+		e.WriteLog(err)
 	}
 	c.Unlock()
 }

@@ -1,6 +1,8 @@
 package html
 
 import (
+	"bufio"
+	"os"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -201,13 +203,24 @@ func (c *ConfigHTML) setJobLog(e *job.Exec) *JobLog {
 }
 
 // setLogDetail display log detail for every job
-func (c *ConfigHTML) setLogDetail(id string) *Detail {
+func (c *ConfigHTML) setLogDetail(id string) (*Detail, error) {
 	d := NewDetail()
 	e := c.Jobs[id]
 	d.Name = e.Name
 	d.ID = e.GetNameID()
 	d.Command = e.Command
 	d.Crontab = e.Time
-	d.LogName = e.LogName
-	return d
+	logF, err := os.Open(e.LogName)
+	defer logF.Close()
+	if err != nil {
+		return d, err
+	}
+	logScanner := bufio.NewScanner(logF)
+	// TODO: improve display
+	var logString string
+	for logScanner.Scan() {
+		logString += "<p>"+logScanner.Text()+"</p>"
+	}
+	d.Log = logString
+	return d, nil
 }
