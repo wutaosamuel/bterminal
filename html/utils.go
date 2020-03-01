@@ -210,16 +210,25 @@ func (c *ConfigHTML) setLogDetail(id string) (*Detail, error) {
 	d.ID = e.GetNameID()
 	d.Command = e.Command
 	d.Crontab = e.Time
-	logF, err := os.Open(e.LogName)
-	defer logF.Close()
+	isLog, err := utils.IsFile(e.LogName)
 	if err != nil {
 		return d, err
 	}
-	logScanner := bufio.NewScanner(logF)
-	// TODO: improve display
 	var logString string
-	for logScanner.Scan() {
-		logString += "<p>"+logScanner.Text()+"</p>"
+	if isLog {
+		logF, err := os.Open(e.LogName)
+		defer logF.Close()
+		if err != nil {
+			return d, err
+		}
+		logScanner := bufio.NewScanner(logF)
+		// TODO: improve display
+		for logScanner.Scan() {
+			logString += "<p>"+logScanner.Text()+"</p>"
+		}
+	}
+	if !isLog {
+		logString = ""
 	}
 	d.Log = logString
 	return d, nil

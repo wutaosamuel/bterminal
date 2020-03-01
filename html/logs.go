@@ -117,6 +117,7 @@ func (c *ConfigHTML) logDetail(w http.ResponseWriter, key string) {
 }
 
 // deleteLog delete a log
+// TODO: delete log by running cron job
 func (c *ConfigHTML) deleteLog(key string) {
 	c.Lock()
 	j := c.Jobs[key[7:]]

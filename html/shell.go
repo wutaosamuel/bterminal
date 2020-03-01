@@ -63,7 +63,7 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	fmt.Println("start execAction")
 	e := c.setExec(name, command, crontab)
 	l := c.setJobLog(e)
-	go e.DoExec()
+	e.DoExec()
 	c.Lock()
 	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
@@ -85,7 +85,7 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	e := c.setExec(name, command, crontab)
 	j := c.setJob(e)
 	l := c.setJobLog(e)
-	go e.StartCron()
+	e.StartCron()
 	c.Lock()
 	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e

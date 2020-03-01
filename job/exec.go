@@ -2,6 +2,7 @@ package job
 
 import (
 	"log"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -116,22 +117,22 @@ func (e *Exec) DoExec() {
 // StartCron do schedule of Exec
 func (e *Exec) StartCron() {
 	// start cron
-	e.Lock()
 	e.Cron = cron.New()
+	fmt.Println("cron start")
 	if _, err := e.Cron.AddFunc(e.Time, func() { e.DoExec() }); err != nil {
-		e.WriteLogFunc(func(l *log.Logger){l.Fatalln(err)})
+		e.WriteLog(err)
 	}
 	e.WriteLog(e.Name + " cron start!")
 	e.Cron.Start()
-	e.Unlock()
+	fmt.Println("cron ok")
 }
 
 // StopCron to stop job
 func (e *Exec) StopCron() {
 	e.Lock()
 	e.Cron.Stop()
-	e.WriteLog(e.Name + " cron has stopped!")
 	e.Unlock()
+	e.WriteLog(e.Name + " cron has stopped!")
 }
 
 // DeleteLog to delete log

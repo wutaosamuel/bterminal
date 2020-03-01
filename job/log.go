@@ -49,6 +49,14 @@ func (e *Exec) WriteLogFunc(logFunc LogActCallback) {
 // ReadLog read log
 func (e *Exec) ReadLog() (string, error) {
 	e.RLock()
+	// avoiding if log is not exist
+	isFile, err := utils.IsFile(e.LogName)
+	if err != nil {
+		return "", err
+	}
+	if !isFile {
+		return "", nil
+	}
 	str, err := utils.ReadLog(e.LogName)
 	e.RUnlock()
 	return str, err

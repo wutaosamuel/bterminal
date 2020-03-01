@@ -7,6 +7,7 @@ package html
 
 import (
 	"net/http"
+	"path/filepath"
 
 	"../utils"
 )
@@ -83,21 +84,31 @@ func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 		if !c.isToken(w, req) {
 			return
 		}
-		c.jobsAction(req)
+		c.jobsAction(w, req)
 	}
 	return
 }
 
 // JobsAction do jobs action
 // general stop action
-func (c *ConfigHTML) jobsAction(req *http.Request) {
+func (c *ConfigHTML) jobsAction(w http.ResponseWriter, req *http.Request) {
 	// read ID for stop
 	for key := range req.Form {
 		if key[:5] == "Stop-" {
 			c.Lock()
 			job := c.Jobs[key[5:]]
+			j := c.setJob(&job)
 			job.StopCron()
+			// delete job from jobs.html
+			err := utils.DeletePage(
+				j,
+				filepath.Join(c.AppPath, "html", "jobs.html"),
+				filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
+		  if err != nil {
+				job.WriteLog(err)
+			}
 			c.Unlock()
+			http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
 		}
 	}
 }
