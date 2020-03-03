@@ -16,3 +16,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# log for executing command
+log/
+
+# unnessery html file, automatically generate when program start
+html/jobs.html
+html/logs.html

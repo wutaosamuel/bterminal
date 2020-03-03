@@ -26,6 +26,7 @@ func main() {
 
 	if *helpFlag {
 		pflag.Usage()
+		os.Exit(0)
 	}
 
 	fmt.Println(*configPathFlag)

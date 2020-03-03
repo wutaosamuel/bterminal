@@ -88,7 +88,7 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 			fmt.Println(key)
 			if key[:7] == "Delete-" {
 				c.deleteLog(key)
-				http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
+				http.Redirect(w, req, "/logs.html", http.StatusSeeOther)
 			}
 			if key[:7] == "Detail-" {
 				c.logDetail(w, key)
