@@ -47,12 +47,12 @@
 
 ## TODO
 
-- [] delete log and stop jobs
-- [] recovery jobs
-- [] recovery logs
-- [] test wrong format cron
-- [] test on Windows, MacOs
-- [] 新的网页UI或者软件UI
+- [ ] delete log and stop jobs
+- [ ] recovery jobs
+- [ ] recovery logs
+- [ ] test wrong format cron
+- [ ] test on Windows, MacOs
+- [ ] 新的网页UI或者软件UI
 
 ## 贡献
 

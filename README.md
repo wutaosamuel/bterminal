@@ -55,12 +55,12 @@ Figure 4: display all tasks' log
 
 ## TODO
 
-- [] delete log and stop jobs
-- [] recovery jobs
-- [] recovery logs
-- [] test wrong format cron
-- [] test on Windows, MacOs
-- [] develop new web interface or a software UI
+- [ ] delete log and stop jobs
+- [ ] recovery jobs
+- [ ] recovery logs
+- [ ] test wrong format cron
+- [ ] test on Windows, MacOs
+- [ ] develop new web interface or a software UI
 
 ## Contributing
 
