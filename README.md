@@ -4,7 +4,8 @@ English | [中文](./README_CN.md)
 
 A simple tool executes command with or without schedule.
 It is self-hosted web service without dependencies.
-It is based on golang, can run on any operating system, including Windows.
+The project primarily uses golang,
+which provides good flexibility as result of cross-platform property(e.g. Windows).
 
 ## Installation
 
@@ -14,7 +15,7 @@ It is based on golang, can run on any operating system, including Windows.
 - Execute single command on web browser, running on background service.
 - Cron Scheduling on all operating system, including Windows.
   - [cron wiki](https://en.wikipedia.org/wiki/Cron)
-- Cookie sessions and single tokens are trying to improve http security.
+- Cookie sessions and single tokens are adopted to improve http security.
 
 ## Getting Started
 
@@ -27,21 +28,22 @@ It is based on golang, can run on any operating system, including Windows.
 Figure 1: Password index page
 
 Password protection can be setted by config or cli command
-and will be encoded by Base64
+and is Base64 encoded
 
 ![BTerminalPassword](./image/bterminalPassword.png)
 
 Figure 2: UI of Single Command Entering
 
-The command is required and the name and cron scheduling can be empty.
+The command is required,
+and whereas the name and cron scheduling are optional.
 The command will execute immediately when cron scheduling is empty.
 Strongly recommend
 that shell script or python handle multiple commands input.
 
-The reason why I want to create this tool is
-the international bandwidth has limited by home using with some reason.
-but the bandwidth will be less QoS around four in the morning.
-So, I can update content or do some task in Windows or linux at that time.
+The main motivation of this project is
+the international output bandwidth of Chinese Telecom has been QoS by home using with some reason.
+Therefore, it is beneficial to exploit such an unused bandwidth,
+and schedule certain tasks to less-QoS periods, typically around 4am.  
 
 ![BTerminalShell](./image/bterminalShell.png)
 
@@ -64,7 +66,7 @@ Figure 4: display all tasks' log
 
 ## Contributing
 
-If you are interested, really welcome to get involved.
+If you are interested, you are welcome to contribute to this project!
 
 - if you encounter a bug, issue it first.
 - if you have an idea or problem, feel free to post it on issue.
