@@ -59,9 +59,14 @@ Figure 4: display all tasks' log
 
 - [ ] delete log and stop jobs
 - [ ] recovery jobs
+  - [ ] test
 - [ ] recovery logs
+  - [ ] test
+- [ ] restart a stopped job
 - [ ] test wrong format cron
 - [ ] test on Windows, MacOs
+- [ ] make windows installer
+- [ ] deb package
 - [ ] develop new web interface or a software UI
 
 ## Contributing

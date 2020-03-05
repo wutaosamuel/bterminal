@@ -6,6 +6,7 @@ package html
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -53,6 +54,11 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		if crontab != "" {
 			c.cronAction(name, command, crontab)
 			http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
+		}
+		// update jobs data
+		if err := c.updateDat(); err != nil {
+			log.Println(err)
+			return
 		}
 	}
 	return

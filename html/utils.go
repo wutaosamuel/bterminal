@@ -2,9 +2,9 @@ package html
 
 import (
 	"bufio"
-	"os"
 	"fmt"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -37,7 +37,8 @@ func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 		"",
 		conf.NewConfig(),
 		make(map[string]int),
-		make(map[string]job.Exec)}
+		make(map[string]job.Exec),
+	}
 }
 
 // ConfigHTMLInit init ConfigHTML
@@ -51,26 +52,44 @@ func (c *ConfigHTML) ConfigHTMLInit() *ConfigHTML {
 /////////////////// Public ////////////////
 
 // Start setting up html
-// generate html file
-// jobs.html & logs.html
+// recover jobs && logs
+// generate jobs.html & logs.html
 func (c *ConfigHTML) Start() {
-	var jobs []Job
-	var jobLogs []JobLog
+	var (
+		jobs    []Job
+		jobLogs []JobLog
+	)
+	// read log dir
+	logFiles, err := filepath.Glob(c.Config.LogDir)
+	utils.CheckPanic(err)
+
+	// recover jobs & logs in terms of c.jobs, should be configured before starting
+	// if time is "", it has been executed. not allow to recover jobs
+	// if log not exist, not allow to recover joblogs
 	for _, e := range c.Jobs {
-		jobs = append(jobs, *c.setJob(&e))
-		jobLogs = append(jobLogs, *c.setJobLog(&e))
+		// add cron jobs
+		if e.Time != "" {
+			jobs = append(jobs, *c.setJob(&e))
+		}
+		// add jog logs
+		for _, logFile := range logFiles {
+			if strings.Contains(logFile, e.GetNameID()) {
+				jobLogs = append(jobLogs, *c.setJobLog(&e))
+				break
+			}
+		}
 	}
 
-	// jobs.html
+	// generate jobs.html
 	jobsHTML := GenerateJobs(
 		jobs,
 		filepath.Join(c.AppPath, "html", "template", "jobs.html"),
 		filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
-	err := utils.SaveHTML(
+	err = utils.SaveHTML(
 		filepath.Join(c.AppPath, "html", "jobs.html"),
 		jobsHTML)
 	utils.CheckPanic(err)
-	// jobLogs.html
+	// generate jobLogs.html
 	jobLogsHTML := GenerateJobLogs(
 		jobLogs,
 		filepath.Join(c.AppPath, "html", "template", "logs.html"),
@@ -224,7 +243,7 @@ func (c *ConfigHTML) setLogDetail(id string) (*Detail, error) {
 		logScanner := bufio.NewScanner(logF)
 		// TODO: improve display
 		for logScanner.Scan() {
-			logString += "<p>"+logScanner.Text()+"</p>"
+			logString += "<p>" + logScanner.Text() + "</p>"
 		}
 	}
 	if !isLog {
@@ -232,4 +251,16 @@ func (c *ConfigHTML) setLogDetail(id string) (*Detail, error) {
 	}
 	d.Log = logString
 	return d, nil
+}
+
+// updateDat update job data
+func (c *ConfigHTML) updateDat() error {
+	c.Lock()
+	datPath := filepath.Join(c.AppPath, "GobData.dat")
+	err := job.SaveEncodeDat(datPath, c.JobID, c.Jobs)
+	c.Unlock()
+	if err != nil {
+		return err
+	}
+	return nil
 }

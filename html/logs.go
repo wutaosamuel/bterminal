@@ -7,9 +7,11 @@ package html
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"path/filepath"
 
+	"../job"
 	"../utils"
 )
 
@@ -134,5 +136,10 @@ func (c *ConfigHTML) deleteLog(key string) {
 	}
 	delete(c.JobID, j.GetNameID())
 	delete(c.Jobs, j.GetNameID())
+	// update data
+	datPath := filepath.Join(c.AppPath, "GobData.dat")
+	if err := job.SaveEncodeDat(datPath, c.JobID, c.Jobs); err != nil {
+		log.Println(err)
+	}
 	c.Unlock()
 }

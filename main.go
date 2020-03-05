@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 
+	"./job"
 	"./conf"
 	ht "./html"
 )
@@ -52,15 +53,23 @@ func Main(config *conf.Config, appPath string) {
 	fmt.Println(config)
 
 	// setting up config html
-	fmt.Println("start html")
 	configHTML := ht.NewConfigHTML(6 * time.Hour)
 	configHTML.Config = config
 	configHTML.AppPath = appPath
-	// TODO: restore jobs
-	//configHTML.JobID
-	//configHTML.Jobs
+
+	// recover jobs from dat
+	datPath := filepath.Join(appPath, "GobData.dat")
+	dat := job.NewDat()
+	err := dat.ReadDecode(datPath)
+	if err != nil {
+		panic(err)
+	}
+	// set recover job in config html
+	configHTML.Jobs = dat.Jobs
+	configHTML.JobID = dat.JobID
 
 	//generate jobs.html & logs.html
+	fmt.Println("start html")
 	configHTML.Start()
 
 	// start http/web server

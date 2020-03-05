@@ -67,6 +67,7 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 }
 
 // HandleJobs handle jobs
+// TODO: job restart action
 func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	PrintHTMLInfo(req)
@@ -91,6 +92,7 @@ func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 
 // JobsAction do jobs action
 // general stop action
+// TODO: job restart action
 func (c *ConfigHTML) jobsAction(w http.ResponseWriter, req *http.Request) {
 	// read ID for stop
 	for key := range req.Form {
@@ -100,15 +102,17 @@ func (c *ConfigHTML) jobsAction(w http.ResponseWriter, req *http.Request) {
 			j := c.setJob(&job)
 			job.StopCron()
 			// delete job from jobs.html
+			// TODO: restart job action
 			err := utils.DeletePage(
 				j,
 				filepath.Join(c.AppPath, "html", "jobs.html"),
 				filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
-		  if err != nil {
+			if err != nil {
 				job.WriteLog(err)
 			}
 			c.Unlock()
 			http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
+			return
 		}
 	}
 }

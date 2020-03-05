@@ -52,6 +52,8 @@
 - [ ] recovery logs
 - [ ] test wrong format cron
 - [ ] test on Windows, MacOs
+- [ ] make windows installer
+- [ ] deb package
 - [ ] 新的网页UI或者软件UI
 
 ## 贡献
