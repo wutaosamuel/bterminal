@@ -58,7 +58,6 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		// update jobs data
 		if err := c.updateDat(); err != nil {
 			log.Println(err)
-			return
 		}
 	}
 	return
@@ -71,7 +70,6 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 	l := c.setJobLog(e)
 	e.DoExec()
 	c.Lock()
-	c.JobID[e.GetNameID()] = 1
 	c.Jobs[e.GetNameID()] = *e
 	// update logs.html
 	fmt.Println("append page")
@@ -93,7 +91,7 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	l := c.setJobLog(e)
 	e.StartCron()
 	c.Lock()
-	c.JobID[e.GetNameID()] = 1
+	fmt.Println(e.GetNameID())
 	c.Jobs[e.GetNameID()] = *e
 	// update logs.html and jobs.html
 	err := utils.AppendPage(

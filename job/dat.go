@@ -2,6 +2,7 @@ package job
 
 import (
 	"encoding/gob"
+	"fmt"
 	"os"
 
 	"../utils"
@@ -9,15 +10,30 @@ import (
 
 // Dat struct store date create from program
 type Dat struct {
-	JobID map[string]int  // running jobs id
-	Jobs  map[string]Exec // running jobs
+	Jobs map[string]DatJob
 }
 
 // NewDat create a new dat
 func NewDat() *Dat {
 	return &Dat{
-		make(map[string]int),
-		make(map[string]Exec),
+		make(map[string]DatJob),
+	}
+}
+
+// AddDat add a datjob
+func (d *Dat) AddDat(e Exec) {
+	d.Jobs[e.GetNameID()] = *SetDatJob(e)
+}
+
+// AddDatJob add a datjob
+func (d *Dat) AddDatJob(id string, job DatJob) {
+	d.Jobs[id] = job
+}
+
+// SetDatS add datjobs
+func (d *Dat) SetDatS(job map[string]Exec) {
+	for id, j := range job {
+		d.Jobs[id] = *SetDatJob(j)
 	}
 }
 
@@ -31,6 +47,7 @@ func (d *Dat) SaveEncode(name string) error {
 	}
 
 	// encode
+	fmt.Println(d)
 	encode := gob.NewEncoder(f)
 	if err := encode.Encode(d); err != nil {
 		panic(utils.Errs("Encode Dat Error: ", err))
@@ -60,14 +77,25 @@ func (d *Dat) ReadDecode(name string) error {
 	if err := decode.Decode(d); err != nil {
 		panic(utils.Errs("Decode Dat Error: ", err))
 	}
+	fmt.Println(d)
 	return nil
 }
 
-// SaveEncodeDat save dat by JobID & Jobs
-func SaveEncodeDat(name string, jobID map[string]int, jobs map[string]Exec) error {
-	d := &Dat{
-		jobID,
-		jobs,
+// DatJob struct
+type DatJob struct {
+	Name    string
+	Command string
+	LogName string
+	Time    string
+}
+
+// SetDatJob set a job
+func SetDatJob(e Exec) *DatJob {
+	d := &DatJob{
+		e.Name,
+		e.Command,
+		e.LogName,
+		e.Time,
 	}
-	return d.SaveEncode(name)
+	return d
 }

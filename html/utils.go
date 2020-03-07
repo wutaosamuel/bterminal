@@ -23,10 +23,9 @@ type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
-	AppPath string              // set AppPath for read html file in ./bterminal/html
-	Config  *conf.Config        // local config process
-	JobID   map[string]int      // id for each job
-	Jobs    map[string]job.Exec // keep cron jobs
+	AppPath     string              // set AppPath for read html file in ./bterminal/html
+	Config      *conf.Config        // local config process
+	Jobs        map[string]job.Exec // keep cron jobs TODO: merge DataStorage
 }
 
 // NewConfigHTML create new one
@@ -36,7 +35,6 @@ func NewConfigHTML(defaultExpiration time.Duration) *ConfigHTML {
 		utils.NewCookie(defaultExpiration),
 		"",
 		conf.NewConfig(),
-		make(map[string]int),
 		make(map[string]job.Exec),
 	}
 }
@@ -60,7 +58,8 @@ func (c *ConfigHTML) Start() {
 		jobLogs []JobLog
 	)
 	// read log dir
-	logFiles, err := filepath.Glob(c.Config.LogDir)
+	logFiles, err := filepath.Glob(filepath.Join(c.Config.LogDir, "*"))
+	fmt.Println(logFiles)
 	utils.CheckPanic(err)
 
 	// recover jobs & logs in terms of c.jobs, should be configured before starting
@@ -100,6 +99,21 @@ func (c *ConfigHTML) Start() {
 	utils.CheckPanic(err)
 }
 
+// RecoverDat recover exec from dat
+func (c *ConfigHTML) RecoverDat(d *job.Dat) {
+	e := make(map[string]job.Exec)
+	for id, j := range d.Jobs {
+		tmp := job.NewExecS()
+		tmp.Name = j.Name
+		tmp.NameID = id
+		tmp.Command = j.Command
+		tmp.LogName = j.LogName
+		tmp.Time = j.Time
+		e[id] = *tmp
+	}
+	c.Jobs = e
+}
+
 // PrintHTMLInfo infomation
 func PrintHTMLInfo(req *http.Request) {
 	fmt.Println(req.Form)
@@ -119,6 +133,13 @@ func FormToString(req *http.Request, attribute string) string {
 // not working on index page
 func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, name string) bool {
 	if !c.isLogIn(req) {
+		// do login
+		if c.Config.Password == "" {
+			c.setSession(w)
+			redirectLink := "/"+name
+			http.Redirect(w, req, redirectLink, http.StatusFound)
+			return true
+		}
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return false
 	}
@@ -255,9 +276,12 @@ func (c *ConfigHTML) setLogDetail(id string) (*Detail, error) {
 
 // updateDat update job data
 func (c *ConfigHTML) updateDat() error {
-	c.Lock()
 	datPath := filepath.Join(c.AppPath, "GobData.dat")
-	err := job.SaveEncodeDat(datPath, c.JobID, c.Jobs)
+	dat := job.NewDat()
+	c.Lock()
+	dat.SetDatS(c.Jobs)
+	fmt.Println("update")
+	err := dat.SaveEncode(datPath)
 	c.Unlock()
 	if err != nil {
 		return err

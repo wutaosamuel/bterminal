@@ -7,6 +7,7 @@ package html
 
 import (
 	"net/http"
+	"fmt"
 	"path/filepath"
 
 	"../utils"
@@ -108,11 +109,13 @@ func (c *ConfigHTML) jobsAction(w http.ResponseWriter, req *http.Request) {
 				filepath.Join(c.AppPath, "html", "jobs.html"),
 				filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
 			if err != nil {
+				fmt.Println(err)
 				job.WriteLog(err)
 			}
 			// set cron time is ""
-			job.Time = ""
+			job.Time = "stopped" + job.Time
 			c.Jobs[key[5:]] = job
+			fmt.Println(c.Jobs[key[5:]].Time)
 			c.Unlock()
 			http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
 			return

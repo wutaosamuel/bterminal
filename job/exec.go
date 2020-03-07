@@ -13,13 +13,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// TODO: recover jobs
 // TODO: cycle job is not work on done
 
 // Exec type for do exec
 type Exec struct {
 	Name    string // the name of jobs
-	nameID  string // the unique ID for each job
+	NameID  string // the unique ID for each job
 	Command string // command required to execute
 	LogName string // log path/name.log
 
@@ -29,7 +28,6 @@ type Exec struct {
 	Cron *cron.Cron // does job need to schedule
 	Time string     // schedule time of job
 }
-
 /////////////////// Setter&&Getter ///////////////////
 
 // NewExecS create a new Exec struct
@@ -43,7 +41,8 @@ func NewExecS() *Exec {
 		&sync.RWMutex{},
 		&log.Logger{},
 		cron.New(),
-		""}
+		"",
+	}
 }
 
 // NewExec create a new Exec struct
@@ -60,9 +59,27 @@ func NewExec() *Exec {
 		""}
 }
 
+// RecoverDat recover exec from dat
+func RecoverDat(d Dat) map[string]Exec {
+	e := make(map[string]Exec)
+	for id, job := range d.Jobs {
+		e[id] = Exec{
+			job.Name,
+			id,
+			job.Command,
+			job.LogName,
+			&sync.RWMutex{},
+			&log.Logger{},
+			cron.New(),
+			job.Time,
+		}
+	}
+	return e
+}
+
 // Init init exec
 func (e *Exec) Init() error {
-	e.nameID = uuid.Must(uuid.NewV4()).String()
+	e.NameID = uuid.Must(uuid.NewV4()).String()
 	// set log path
 	e.SetLogName()
 	return nil
@@ -87,10 +104,10 @@ func (e *Exec) SetLogName() {
 }
 
 // GetNameID get uuid for job
-func (e *Exec) GetNameID() string { return e.nameID }
+func (e *Exec) GetNameID() string { return e.NameID }
 
 // GetNameID8b get the first 8 bits uuid string
-func (e *Exec) GetNameID8b() string { return e.nameID[:8] }
+func (e *Exec) GetNameID8b() string { return e.NameID[:8] }
 
 /////////////////// Main ///////////////////
 

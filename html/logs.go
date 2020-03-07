@@ -10,8 +10,8 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strings"
 
-	"../job"
 	"../utils"
 )
 
@@ -87,13 +87,14 @@ func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		for key := range req.Form {
-			fmt.Println(key)
 			if key[:7] == "Delete-" {
 				c.deleteLog(key)
 				http.Redirect(w, req, "/logs.html", http.StatusSeeOther)
+				return
 			}
 			if key[:7] == "Detail-" {
 				c.logDetail(w, key)
+				return
 			}
 		}
 	}
@@ -125,11 +126,14 @@ func (c *ConfigHTML) deleteLog(key string) {
 	j := c.Jobs[key[7:]]
 	c.RUnlock()
 	// TODO: display info
-	if j.Time != "" {
+	if !strings.Contains(j.Time, "stopped") && j.Time != "" {
 		return
 	}
-	c.Lock()
 	jobLog := c.setJobLog(&j)
+	if j.Time != "" {
+		jobLog.Crontab = jobLog.Crontab[7:]
+	}
+	c.Lock()
 	if err := j.DeleteLog(); err != nil {
 		j.WriteLog(err)
 	}
@@ -140,12 +144,10 @@ func (c *ConfigHTML) deleteLog(key string) {
 	if err != nil {
 		j.WriteLog(err)
 	}
-	delete(c.JobID, j.GetNameID())
 	delete(c.Jobs, j.GetNameID())
+	c.Unlock()
 	// update data
-	datPath := filepath.Join(c.AppPath, "GobData.dat")
-	if err := job.SaveEncodeDat(datPath, c.JobID, c.Jobs); err != nil {
+	if err := c.updateDat(); err != nil {
 		log.Println(err)
 	}
-	c.Unlock()
 }

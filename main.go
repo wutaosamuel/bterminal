@@ -65,8 +65,8 @@ func Main(config *conf.Config, appPath string) {
 		panic(err)
 	}
 	// set recover job in config html
-	configHTML.Jobs = dat.Jobs
-	configHTML.JobID = dat.JobID
+	fmt.Println(dat)
+	configHTML.RecoverDat(dat)
 
 	//generate jobs.html & logs.html
 	fmt.Println("start html")
@@ -82,7 +82,7 @@ func Main(config *conf.Config, appPath string) {
 	http.HandleFunc("/shell.html", configHTML.HandleShell)
 	http.HandleFunc("/jobs.html", configHTML.HandleJobs)
 	http.HandleFunc("/logs.html", configHTML.HandleLogs)
-	err := http.ListenAndServe(":"+config.Port, nil)
+	err = http.ListenAndServe(":"+config.Port, nil)
 	if err != nil {
 		panic(err)
 	}
