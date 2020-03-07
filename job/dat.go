@@ -2,7 +2,6 @@ package job
 
 import (
 	"encoding/gob"
-	"fmt"
 	"os"
 
 	"../utils"
@@ -47,7 +46,6 @@ func (d *Dat) SaveEncode(name string) error {
 	}
 
 	// encode
-	fmt.Println(d)
 	encode := gob.NewEncoder(f)
 	if err := encode.Encode(d); err != nil {
 		panic(utils.Errs("Encode Dat Error: ", err))
@@ -77,7 +75,6 @@ func (d *Dat) ReadDecode(name string) error {
 	if err := decode.Decode(d); err != nil {
 		panic(utils.Errs("Decode Dat Error: ", err))
 	}
-	fmt.Println(d)
 	return nil
 }
 

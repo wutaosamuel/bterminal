@@ -1,8 +1,8 @@
 package job
 
 import (
-	"os"
 	"log"
+	"os"
 
 	"../utils"
 )

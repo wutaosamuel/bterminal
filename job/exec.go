@@ -2,7 +2,6 @@ package job
 
 import (
 	"log"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -28,6 +27,7 @@ type Exec struct {
 	Cron *cron.Cron // does job need to schedule
 	Time string     // schedule time of job
 }
+
 /////////////////// Setter&&Getter ///////////////////
 
 // NewExecS create a new Exec struct
@@ -135,13 +135,11 @@ func (e *Exec) DoExec() {
 func (e *Exec) StartCron() {
 	// start cron
 	e.Cron = cron.New()
-	fmt.Println("cron start")
 	if _, err := e.Cron.AddFunc(e.Time, func() { e.DoExec() }); err != nil {
 		e.WriteLog(err)
 	}
 	e.WriteLog(e.Name + " cron start!")
 	e.Cron.Start()
-	fmt.Println("cron ok")
 }
 
 // StopCron to stop job

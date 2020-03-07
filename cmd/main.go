@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -29,12 +28,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Println(*configPathFlag)
-	fmt.Println(*portFlag)
-	fmt.Println(*passwordFlag)
-	fmt.Println(*logDirFlag)
-
-	// set config 
+	// set config
 	config := conf.NewConfig()
 	config.Path = *configPathFlag
 	config.Port = strconv.Itoa(*portFlag)
@@ -43,8 +37,8 @@ func main() {
 	config.Init()
 
 	// set App path
-	thisPath,_ := os.Getwd()
-	appPath,_ := filepath.Abs(filepath.Dir(thisPath))
+	thisPath, _ := os.Getwd()
+	appPath, _ := filepath.Abs(filepath.Dir(thisPath))
 
 	// do main func
 	bt.Main(config, appPath)

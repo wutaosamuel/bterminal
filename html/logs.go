@@ -72,7 +72,6 @@ func GenerateJobLogs(logs []JobLog, template, pattern string) string {
 // HandleLogs handle logs.html action
 func (c *ConfigHTML) HandleLogs(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	PrintHTMLInfo(req)
 
 	// authentication is login
 	if req.Method == "GET" {

@@ -1,15 +1,15 @@
 package bterminal
 
 import (
-	"os"
 	"fmt"
-	"time"
 	"net/http"
+	"os"
 	"path/filepath"
+	"time"
 
-	"./job"
 	"./conf"
 	ht "./html"
+	"./job"
 )
 
 // Main func for bterminal
@@ -50,7 +50,6 @@ func Main(config *conf.Config, appPath string) {
 			config.LogDir = logDir
 		}
 	}
-	fmt.Println(config)
 
 	// setting up config html
 	configHTML := ht.NewConfigHTML(6 * time.Hour)
@@ -65,7 +64,6 @@ func Main(config *conf.Config, appPath string) {
 		panic(err)
 	}
 	// set recover job in config html
-	fmt.Println(dat)
 	configHTML.RecoverDat(dat)
 
 	//generate jobs.html & logs.html

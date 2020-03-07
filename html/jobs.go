@@ -7,7 +7,6 @@ package html
 
 import (
 	"net/http"
-	"fmt"
 	"path/filepath"
 
 	"../utils"
@@ -71,7 +70,6 @@ func GenerateJobs(jobs []Job, template, pattern string) string {
 // TODO: job restart action
 func (c *ConfigHTML) HandleJobs(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	PrintHTMLInfo(req)
 
 	// authentication is login
 	if req.Method == "GET" {
@@ -109,13 +107,11 @@ func (c *ConfigHTML) jobsAction(w http.ResponseWriter, req *http.Request) {
 				filepath.Join(c.AppPath, "html", "jobs.html"),
 				filepath.Join(c.AppPath, "html", "pattern", "job_pattern1.html"))
 			if err != nil {
-				fmt.Println(err)
 				job.WriteLog(err)
 			}
 			// set cron time is ""
 			job.Time = "stopped" + job.Time
 			c.Jobs[key[5:]] = job
-			fmt.Println(c.Jobs[key[5:]].Time)
 			c.Unlock()
 			http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
 			return

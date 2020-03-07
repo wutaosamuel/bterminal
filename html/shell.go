@@ -5,7 +5,6 @@ package html
  */
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -18,7 +17,6 @@ import (
 // Check client cookie first
 func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	PrintHTMLInfo(req)
 
 	// authentication is login
 	if req.Method == "GET" {
@@ -35,9 +33,6 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		name := FormToString(req, "name")
 		command := FormToString(req, "command")
 		crontab := FormToString(req, "crontab")
-		fmt.Println(name)
-		fmt.Println(command)
-		fmt.Println(crontab)
 		// command needed
 		if command == "" {
 			// TODO: display info
@@ -65,14 +60,12 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 
 // execAction action for executing a job
 func (c *ConfigHTML) execAction(name, command, crontab string) {
-	fmt.Println("start execAction")
 	e := c.setExec(name, command, crontab)
 	l := c.setJobLog(e)
 	e.DoExec()
 	c.Lock()
 	c.Jobs[e.GetNameID()] = *e
 	// update logs.html
-	fmt.Println("append page")
 	err := utils.AppendPage(
 		l,
 		filepath.Join(c.AppPath, "html", "logs.html"),
@@ -81,7 +74,6 @@ func (c *ConfigHTML) execAction(name, command, crontab string) {
 		e.WriteLog(err)
 	}
 	c.Unlock()
-	fmt.Println("done")
 }
 
 // cronAction action for a crontab job
@@ -91,7 +83,6 @@ func (c *ConfigHTML) cronAction(name, command, crontab string) {
 	l := c.setJobLog(e)
 	e.StartCron()
 	c.Lock()
-	fmt.Println(e.GetNameID())
 	c.Jobs[e.GetNameID()] = *e
 	// update logs.html and jobs.html
 	err := utils.AppendPage(

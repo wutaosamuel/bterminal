@@ -16,7 +16,7 @@ func TestDoExec(t *testing.T) {
 	t.Log(testExec)
 	testExec.StartCron()
 	t.Log("Cron Start")
-	time.Sleep(time.Duration(121)*time.Second)
+	time.Sleep(time.Duration(121) * time.Second)
 	testExec.StopCron()
 	t.Log("Cron Stop")
 

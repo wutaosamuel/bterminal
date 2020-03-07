@@ -6,7 +6,6 @@ package html
 
 import (
 	"encoding/base64"
-	"fmt"
 	"net/http"
 	"path/filepath"
 )
@@ -15,7 +14,6 @@ import (
 func (c *ConfigHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
 	//http.ServeFile(w, req, "html/")
 	req.ParseForm()
-	PrintHTMLInfo(req)
 
 	// First time access server
 	// check user if is login
@@ -42,7 +40,6 @@ func (c *ConfigHTML) HandleIndex(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		password, _ := base64.StdEncoding.DecodeString(FormToString(req, "password"))
-		fmt.Println(string(password))
 		if string(password) != c.Config.Password {
 			// TODO: display password error info
 			http.Redirect(w, req, "/", http.StatusFound)

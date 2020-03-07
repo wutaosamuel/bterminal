@@ -2,7 +2,6 @@ package html
 
 import (
 	"bufio"
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -23,9 +22,9 @@ type ConfigHTML struct {
 	*sync.RWMutex      // read & write locker for execs
 	*utils.CookieUtils // store session and token in cookie
 
-	AppPath     string              // set AppPath for read html file in ./bterminal/html
-	Config      *conf.Config        // local config process
-	Jobs        map[string]job.Exec // keep cron jobs TODO: merge DataStorage
+	AppPath string              // set AppPath for read html file in ./bterminal/html
+	Config  *conf.Config        // local config process
+	Jobs    map[string]job.Exec // keep cron jobs TODO: merge DataStorage
 }
 
 // NewConfigHTML create new one
@@ -59,7 +58,6 @@ func (c *ConfigHTML) Start() {
 	)
 	// read log dir
 	logFiles, err := filepath.Glob(filepath.Join(c.Config.LogDir, "*"))
-	fmt.Println(logFiles)
 	utils.CheckPanic(err)
 
 	// recover jobs & logs in terms of c.jobs, should be configured before starting
@@ -114,14 +112,6 @@ func (c *ConfigHTML) RecoverDat(d *job.Dat) {
 	c.Jobs = e
 }
 
-// PrintHTMLInfo infomation
-func PrintHTMLInfo(req *http.Request) {
-	fmt.Println(req.Form)
-	fmt.Println("path: ", req.URL.Path)
-	fmt.Println("scheme: ", req.URL.Scheme)
-	fmt.Println("method: ", req.Method)
-}
-
 // FormToString to string
 func FormToString(req *http.Request, attribute string) string {
 	return strings.Join(req.Form[attribute], "")
@@ -136,7 +126,7 @@ func (c *ConfigHTML) authentication(w http.ResponseWriter, req *http.Request, na
 		// do login
 		if c.Config.Password == "" {
 			c.setSession(w)
-			redirectLink := "/"+name
+			redirectLink := "/" + name
 			http.Redirect(w, req, redirectLink, http.StatusFound)
 			return true
 		}
@@ -280,7 +270,6 @@ func (c *ConfigHTML) updateDat() error {
 	dat := job.NewDat()
 	c.Lock()
 	dat.SetDatS(c.Jobs)
-	fmt.Println("update")
 	err := dat.SaveEncode(datPath)
 	c.Unlock()
 	if err != nil {

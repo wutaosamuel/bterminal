@@ -1,6 +1,6 @@
 package utils
 
-/* 
+/*
  * log.go recode info by logging
  * the log file will be close and open frequently
  */
