@@ -119,10 +119,16 @@ func (c *ConfigHTML) logDetail(w http.ResponseWriter, key string) {
 }
 
 // deleteLog delete a log
-// TODO: delete log by running cron job
+// not allow to delete log, when cron time exist
 func (c *ConfigHTML) deleteLog(key string) {
-	c.Lock()
+	c.RLock()
 	j := c.Jobs[key[7:]]
+	c.RUnlock()
+	// TODO: display info
+	if j.Time != "" {
+		return
+	}
+	c.Lock()
 	jobLog := c.setJobLog(&j)
 	if err := j.DeleteLog(); err != nil {
 		j.WriteLog(err)

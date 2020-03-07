@@ -110,6 +110,9 @@ func (c *ConfigHTML) jobsAction(w http.ResponseWriter, req *http.Request) {
 			if err != nil {
 				job.WriteLog(err)
 			}
+			// set cron time is ""
+			job.Time = ""
+			c.Jobs[key[5:]] = job
 			c.Unlock()
 			http.Redirect(w, req, "/jobs.html", http.StatusSeeOther)
 			return

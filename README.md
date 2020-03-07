@@ -65,6 +65,7 @@ Figure 4: display all tasks' log
 - [ ] restart a stopped job
 - [ ] test wrong format cron
 - [ ] test on Windows, MacOs
+- [ ] a log for watching the whole program
 - [ ] make windows installer
 - [ ] deb package
 - [ ] develop new web interface or a software UI
