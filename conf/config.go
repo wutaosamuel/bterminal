@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // Config contain settings

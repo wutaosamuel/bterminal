@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // JobLog for logs html

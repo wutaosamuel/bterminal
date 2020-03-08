@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/pflag"
 
-	bt "../../bternimal"
-	"../conf"
+	bt "github.com/wutaosamuel/bterminal"
+	"github.com/wutaosamuel/bterminal/conf"
 )
 
 func main() {

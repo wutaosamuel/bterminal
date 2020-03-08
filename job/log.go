@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // LogFunction interface

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // HandleShell shell.html func

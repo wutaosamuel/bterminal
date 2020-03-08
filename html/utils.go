@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"../conf"
-	"../job"
-	"../utils"
+	"github.com/wutaosamuel/bterminal/conf"
+	"github.com/wutaosamuel/bterminal/job"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // ConfigHTML for HTML use

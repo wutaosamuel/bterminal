@@ -4,7 +4,7 @@ import (
 	"encoding/gob"
 	"os"
 
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // Dat struct store date create from program

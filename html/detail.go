@@ -6,7 +6,7 @@ package html
  */
 
 import (
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
 )
 
 // Detail for detail html

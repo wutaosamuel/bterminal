@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"./conf"
-	ht "./html"
-	"./job"
+	"github.com/wutaosamuel/bterminal/conf"
+	ht "github.com/wutaosamuel/bterminal/html"
+	"github.com/wutaosamuel/bterminal/job"
 )
 
 // Main func for bterminal
