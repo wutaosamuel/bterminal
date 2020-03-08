@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 
 	"github.com/spf13/pflag"
@@ -37,8 +38,11 @@ func main() {
 	config.Init()
 
 	// set App path
-	thisPath, _ := os.Getwd()
-	appPath, _ := filepath.Abs(filepath.Dir(thisPath))
+	_, thisPath, _, ok := runtime.Caller(0)
+	if !ok {
+		panic("Set App Path fail")
+	}
+	appPath := filepath.Dir(filepath.Dir(thisPath))
 
 	// do main func
 	bt.Main(config, appPath)

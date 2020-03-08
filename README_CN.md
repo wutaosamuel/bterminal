@@ -47,9 +47,13 @@
 
 ## TODO
 
-- [ ] delete log and stop jobs
+- [x] delete log and stop jobs
 - [ ] recovery jobs
+  - [x] done
+  - [ ] test
 - [ ] recovery logs
+  - [x] done
+  - [ ] test
 - [ ] test wrong format cron
 - [ ] test on Windows, MacOs
 - [ ] make windows installer

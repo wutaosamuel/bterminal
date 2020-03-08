@@ -57,10 +57,12 @@ Figure 4: display all tasks' log
 
 ## TODO
 
-- [ ] delete log and stop jobs
+- [x] delete log and stop jobs
 - [ ] recovery jobs
+  - [x] done
   - [ ] test
 - [ ] recovery logs
+  - [x] done
   - [ ] test
 - [ ] restart a stopped job
 - [ ] test wrong format cron
