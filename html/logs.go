@@ -147,6 +147,7 @@ func (c *ConfigHTML) deleteLog(key string) {
 	c.Unlock()
 	// update data
 	if err := c.updateDat(); err != nil {
+		fmt.Println(err)
 		log.Println(err)
 	}
 }

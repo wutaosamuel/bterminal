@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/wutaosamuel/bterminal/conf"
+	bt "github.com/wutaosamuel/bterminal/"
 )
 
 func main() {
@@ -33,16 +34,17 @@ func main() {
 	config.Path = *configPathFlag
 	config.Port = strconv.Itoa(*portFlag)
 	config.Password = *passwordFlag
-	config.LogDir = *logDirFlag
+	if *logDirFlag != "" {
+		config.LogDir = *logDirFlag
+	}
+	if *logDirFlag == "" {
+		config.LogDir = filepath.Join("/var", "log", "btermianl")
+	}
 	config.Init()
 
 	// set App path
-	_, thisPath, _, ok := runtime.Caller(0)
-	if !ok {
-		panic("Set App Path fail")
-	}
-	appPath := filepath.Dir(thisPath)
+	appPath := "/usr/share/bterminal"
 
 	// do main func
-	Main(config, appPath)
+	bt.Main(config, appPath)
 }

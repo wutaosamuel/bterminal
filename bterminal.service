@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-Restart=on-failure
+Restart=always
 RestartSec=10s
-ExecStart=$GOPATH/bin/bterminal -c $GOPATH/src/config.json
+ExecStart=$GOPATH(replace your path)/bin/bterminal -c $GOPATH(replace your path)/src/github.com/wutaosamuel/bterminal/config.json
 
 [Install]
 WantedBy=multi-user.target

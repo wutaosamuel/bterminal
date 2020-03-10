@@ -1,6 +1,9 @@
 # vscode directory
 .vscode/
 
+# Debian package
+cmd/deb/bterminal/usr/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

@@ -5,6 +5,7 @@ package html
  */
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -52,6 +53,7 @@ func (c *ConfigHTML) HandleShell(w http.ResponseWriter, req *http.Request) {
 		}
 		// update jobs data
 		if err := c.updateDat(); err != nil {
+			fmt.Println(err)
 			log.Println(err)
 		}
 	}
