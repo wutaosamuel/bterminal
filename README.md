@@ -9,6 +9,10 @@ which provides good flexibility as result of cross-platform property(e.g. Window
 
 ## Installation
 
+``` sh
+go get github.com/wutaosamuel/bterminal
+```
+
 ## Features
 
 - Password protection
@@ -58,6 +62,7 @@ Figure 4: display all tasks' log
 ## TODO
 
 - [x] delete log and stop jobs
+- [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
 - [ ] recovery jobs
   - [x] done
   - [ ] test

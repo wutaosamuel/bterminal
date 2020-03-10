@@ -7,6 +7,10 @@
 
 ## 安装
 
+``` sh
+go get github.com/wutaosamuel/bterminal
+```
+
 ## 功能
 
 - 密码保护
@@ -48,6 +52,7 @@
 ## TODO
 
 - [x] delete log and stop jobs
+- [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
 - [ ] recovery jobs
   - [x] done
   - [ ] test

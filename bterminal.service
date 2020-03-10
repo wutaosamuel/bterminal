@@ -1,0 +1,12 @@
+[Unit]
+Description=bterminal server daemon
+After=network.target
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10s
+ExecStart=$GOPATH/bin/bterminal -c $GOPATH/src/config.json
+
+[Install]
+WantedBy=multi-user.target
