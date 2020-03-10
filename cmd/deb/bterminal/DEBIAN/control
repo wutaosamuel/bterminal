@@ -1,7 +1,0 @@
-Package: bterminal
-Version: 1.0-0
-Architecture: amd64
-Maintainer:wutaosamuel@gmail.com
-Section:unknown
-Priority:optional
-Description: web based terminal server

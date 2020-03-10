@@ -2,7 +2,7 @@
 .vscode/
 
 # Debian package
-cmd/deb/bterminal/usr/
+cmd/deb/bterminal-1.0-0/usr/
 
 # Binaries for programs and plugins
 *.exe

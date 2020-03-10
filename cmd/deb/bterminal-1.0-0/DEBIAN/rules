@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+%:
+    dh $@
+
+binary:
+    dh $@
+
+override_dh_fixperms:
+    dh_fixperms --exclude data

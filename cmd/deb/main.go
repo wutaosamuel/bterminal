@@ -3,20 +3,20 @@ package main
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"strconv"
 
 	"github.com/spf13/pflag"
 
 	"github.com/wutaosamuel/bterminal/conf"
-	bt "github.com/wutaosamuel/bterminal/"
+	"github.com/wutaosamuel/bterminal/utils"
+	bt "github.com/wutaosamuel/bterminal"
 )
 
 func main() {
 	// read from cli
 	var (
 		helpFlag       = pflag.BoolP("help", "h", false, "display usage")
-		configPathFlag = pflag.StringP("config", "c", "", "Json config file")
+		configPathFlag = pflag.StringP("config", "c", "/etc/bterminal/config.json", "Json config file")
 		portFlag       = pflag.IntP("port", "p", 5122, "TCP port for web service")
 		passwordFlag   = pflag.StringP("password", "P", "", "password for protecting web service")
 		logDirFlag     = pflag.StringP("log", "l", "", "log directory for keeping job logs")
@@ -31,14 +31,20 @@ func main() {
 
 	// set config
 	config := conf.NewConfig()
-	config.Path = *configPathFlag
+	isFile, _ := utils.IsFile(*configPathFlag)
+	if isFile {
+		config.Path = *configPathFlag
+	}
+	if !isFile {
+		config.Path = ""
+	}
 	config.Port = strconv.Itoa(*portFlag)
 	config.Password = *passwordFlag
 	if *logDirFlag != "" {
 		config.LogDir = *logDirFlag
 	}
 	if *logDirFlag == "" {
-		config.LogDir = filepath.Join("/var", "log", "btermianl")
+		config.LogDir = filepath.Join("/var", "log", "bterminal")
 	}
 	config.Init()
 

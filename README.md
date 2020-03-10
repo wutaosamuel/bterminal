@@ -10,8 +10,16 @@ which provides good flexibility as result of cross-platform property(e.g. Window
 ## Installation
 
 ``` sh
-go get github.com/wutaosamuel/bterminal
+go get github.com/wutaosamuel/bterminal/cmd/bterminal
 ```
+
+or
+
+``` sh
+# debian/utuntu
+dpkg -i bterminal-1.0-1.deb
+```
+
 
 ## Features
 
