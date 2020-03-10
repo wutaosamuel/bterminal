@@ -1,0 +1,12 @@
+[Unit]
+Description=bterminal server daemon
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+ExecStart=/usr/local/bin/bterminal -c /etc/bterminal/config.json
+
+[Install]
+WantedBy=multi-user.target

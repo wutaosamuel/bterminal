@@ -8,7 +8,14 @@
 ## 安装
 
 ``` sh
-go get github.com/wutaosamuel/bterminal
+go get github.com/wutaosamuel/bterminal/cmd/bterminal
+```
+
+或者
+
+``` sh
+# debian/utuntu
+dpkg -i bterminal-1.0-1.deb
 ```
 
 ## 功能
