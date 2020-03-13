@@ -2,8 +2,8 @@ package main
 
 import (
 	"os"
+	"fmt"
 	"path/filepath"
-	"runtime"
 	"strconv"
 
 	"github.com/spf13/pflag"
@@ -12,6 +12,7 @@ import (
 	bt "github.com/wutaosamuel/bterminal"
 )
 
+// main func
 func main() {
 	// read from cli
 	var (
@@ -29,21 +30,26 @@ func main() {
 		os.Exit(0)
 	}
 
+	appPath := filepath.Join("C:\\ProgramData", "bterminal")
+	fmt.Println(appPath)
+
 	// set config
 	config := conf.NewConfig()
-	config.Path = *configPathFlag
+	if *configPathFlag == "" {
+		config.Path = filepath.Join(appPath, "config.json")
+	} else {
+		config.Path = *configPathFlag
+	}
+	fmt.Println(config.Path)
 	config.Port = strconv.Itoa(*portFlag)
 	config.Password = *passwordFlag
 	config.LogDir = *logDirFlag
 	config.Init()
 
-	// set App path
-	_, thisPath, _, ok := runtime.Caller(0)
-	if !ok {
-		panic("Set App Path fail")
-	}
-	appPath := filepath.Dir(filepath.Dir(filepath.Dir(thisPath)))
-
-	// do main func
-	bt.Main(config, appPath)
+	// set windows systray
+	windowsApp := NewWindowsApp()
+	windowsApp.AddNotifyIcon(
+		func() {
+			bt.Main(config, appPath)
+		})
 }
