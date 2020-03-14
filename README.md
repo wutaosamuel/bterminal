@@ -69,20 +69,14 @@ Figure 4: display all tasks' log
 
 ## TODO
 
-- [x] delete log and stop jobs
 - [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
-- [ ] recovery jobs
-  - [x] done
-  - [ ] test
-- [ ] recovery logs
-  - [x] done
-  - [ ] test
 - [ ] restart a stopped job
 - [ ] test wrong format cron
-- [ ] test on Windows, MacOs
+- [ ] test on MacOs
 - [ ] a log for watching the whole program
-- [ ] make windows installer
-- [ ] deb package
+- [x] make windows installer
+- [x] deb package
+- [ ] support go mod (currently, fail on uuid)
 - [ ] develop new web interface or a software UI
 
 ## Contributing

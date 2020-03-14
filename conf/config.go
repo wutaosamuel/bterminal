@@ -49,10 +49,10 @@ func (c *Config) SetPath(name string) {
 
 // SetPort set port
 // check port can work
+// TODO: display port is busy on panic function
 func (c *Config) SetPort(port string) {
 	listener, err := net.Listen("tcp", ":"+port)
 	if err != nil {
-		listener.Close()
 		panic(utils.Errs("Set Port Error: ", err))
 	}
 	listener.Close()

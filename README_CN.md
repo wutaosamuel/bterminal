@@ -58,18 +58,14 @@ dpkg -i bterminal-1.0-1.deb
 
 ## TODO
 
-- [x] delete log and stop jobs
 - [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
-- [ ] recovery jobs
-  - [x] done
-  - [ ] test
-- [ ] recovery logs
-  - [x] done
-  - [ ] test
+- [ ] restart a stopped job
 - [ ] test wrong format cron
-- [ ] test on Windows, MacOs
-- [ ] make windows installer
-- [ ] deb package
+- [ ] test on MacOs
+- [ ] a log for watching the whole program
+- [x] make windows installer
+- [x] deb package
+- [ ] support go mod (currently, fail on uuid)
 - [ ] 新的网页UI或者软件UI
 
 ## 贡献
