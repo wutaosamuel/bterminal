@@ -14,8 +14,16 @@ go get github.com/wutaosamuel/bterminal/cmd/bterminal
 或者
 
 ``` sh
-# debian/utuntu
+# debian/ubuntu
 dpkg -i bterminal-1.0-1.deb
+```
+
+或者
+
+``` sh
+# windows
+# use after setup
+bterminal-1.0-1.exe
 ```
 
 ## 功能
@@ -30,7 +38,23 @@ dpkg -i bterminal-1.0-1.deb
 
 ### 运行
 
+#### 简单运行
+
+``` sh
+# Linux
+bterminal
+```
+
+``` sh
+# Windows
+1. bterminal.exe
+2. 点击右下角系统托盘中bterminal的开始选项
+```
+
 ### 使用
+
+网络端口，密码和日志路径是可以用命令行命令里改变的。详情 bterminal -h | help。
+如果你的程序是由windows安装工具下载的，可以在C:/ProgramData/bterminal/config.json里改变上述三项变量。
 
 ## 图表
 
@@ -67,6 +91,12 @@ dpkg -i bterminal-1.0-1.deb
 - [x] deb package
 - [ ] support go mod (currently, fail on uuid)
 - [ ] 新的网页UI或者软件UI
+
+## 库
+
+- github.com/patrickmn/go-cache
+- github.com/satori/go.uuid
+- github.com/robfig/cron
 
 ## 贡献
 

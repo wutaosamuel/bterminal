@@ -10,16 +10,23 @@ which provides good flexibility as result of cross-platform property(e.g. Window
 ## Installation
 
 ``` sh
-go get github.com/wutaosamuel/bterminal/cmd/bterminal
+go get -u github.com/wutaosamuel/bterminal/cmd/bterminal
 ```
 
 or
 
 ``` sh
-# debian/utuntu
+# debian/ubuntu
 dpkg -i bterminal-1.0-1.deb
 ```
 
+or
+
+``` sh
+# windows, tested win10 only
+# use after setup
+bterminal-1.0-1.exe
+```
 
 ## Features
 
@@ -33,7 +40,23 @@ dpkg -i bterminal-1.0-1.deb
 
 ### Run
 
+#### Simple run
+
+``` sh
+# Linux
+bterminal
+```
+
+``` sh
+# Windows
+1. bterminal.exe
+2. click start button of bterminal on the right-bottom System tray
+```
+
 ### Usage
+
+Web port, password and logs path can be changed by command. More details: bterminal -h | help.
+if program installed by windows installer, pls, change C:/ProgramData/bterminal/config.json
 
 ## Figures
 
@@ -78,6 +101,12 @@ Figure 4: display all tasks' log
 - [x] deb package
 - [ ] support go mod (currently, fail on uuid)
 - [ ] develop new web interface or a software UI
+
+## Libraries
+
+- github.com/patrickmn/go-cache
+- github.com/satori/go.uuid
+- github.com/robfig/cron
 
 ## Contributing
 
