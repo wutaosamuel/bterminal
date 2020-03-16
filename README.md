@@ -25,7 +25,7 @@ or
 ``` sh
 # windows, tested win10 only
 # use after setup
-bterminal-1.0-1.exe
+bterminal-1.0-1.msi
 ```
 
 ## Features

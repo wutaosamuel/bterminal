@@ -47,7 +47,7 @@ bterminal
 
 ``` sh
 # Windows
-1. bterminal.exe
+1. bterminal.msi
 2. 点击右下角系统托盘中bterminal的开始选项
 ```
 
