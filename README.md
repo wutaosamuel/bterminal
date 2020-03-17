@@ -53,10 +53,15 @@ bterminal
 2. click start button of bterminal on the right-bottom System tray
 ```
 
-### Usage
-
 Web port, password and logs path can be changed by command. More details: bterminal -h | help.
 if program installed by windows installer, pls, change C:/ProgramData/bterminal/config.json
+
+### Usage
+
+``` sh
+# manage jobs on web browser
+127.0.0.1:5122
+```
 
 ## Figures
 
@@ -95,8 +100,10 @@ Figure 4: display all tasks' log
 - [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
 - [ ] restart a stopped job
 - [ ] test wrong format cron
+- [ ] test on Windows
 - [ ] test on MacOs
 - [ ] a log for watching the whole program
+- [ ] limit log length on web interface
 - [x] make windows installer
 - [x] deb package
 - [ ] support go mod (currently, fail on uuid)

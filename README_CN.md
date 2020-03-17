@@ -51,10 +51,15 @@ bterminal
 2. 点击右下角系统托盘中bterminal的开始选项
 ```
 
-### 使用
-
 网络端口，密码和日志路径是可以用命令行命令里改变的。详情 bterminal -h | help。
 如果你的程序是由windows安装工具下载的，可以在C:/ProgramData/bterminal/config.json里改变上述三项变量。
+
+### 使用
+
+``` sh
+# 在浏览器中管理任务
+127.0.0.1:5122
+```
 
 ## 图表
 
@@ -85,8 +90,10 @@ bterminal
 - [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
 - [ ] restart a stopped job
 - [ ] test wrong format cron
+- [ ] test on Windows
 - [ ] test on MacOs
 - [ ] a log for watching the whole program
+- [ ] limit log length on web interface
 - [x] make windows installer
 - [x] deb package
 - [ ] support go mod (currently, fail on uuid)
