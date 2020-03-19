@@ -7,23 +7,24 @@ GOTEST=$(GOCC) test
 BINARY_NAME=bterminal
 
 # CMD dir
-GOCMD=cmd
+GOCMD=./cmd
 GOBUILDWIN=$(GOCMD)/bterminalWin
 GOBUILDLNX=$(GOCMD)/bterminal
 
 all: test build
 build:
-	$(GOBUILD) $(GOBUILDLNX)/. -o $(BINARY_NAME) -v
+	$(GOBUILD) -o $(BINARY_NAME) -v $(GOBUILDLNX)
 test:
 	$(GOTEST) v ./...
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 # run:
-# deps:
+deps:
+	$(GOGET) -u 
 
 # Cross compilation
 build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) $(GOBUILDLNX)/. -o $(BINARY_NAME) -v
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME) -v $(GOBUILDLNX) 
 build-win:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) $(GOBUILDWIN)/. -o $(BINARY_NAME) -v
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -ldflags="-H windowsgui" -o $(BINARY_NAME) -v $(GOBUILDWIN)
