@@ -67,6 +67,7 @@ func (c *ConfigHTML) Start() {
 		// add cron jobs
 		if e.Time != "" {
 			jobs = append(jobs, *c.setJob(&e))
+			go e.StartCron()
 		}
 		// add jog logs
 		for _, logFile := range logFiles {
@@ -98,6 +99,7 @@ func (c *ConfigHTML) Start() {
 }
 
 // RecoverDat recover exec from dat
+// more recover jobs & html on Start()
 func (c *ConfigHTML) RecoverDat(d *job.Dat) {
 	e := make(map[string]job.Exec)
 	for id, j := range d.Jobs {
