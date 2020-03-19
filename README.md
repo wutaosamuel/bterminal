@@ -101,6 +101,7 @@ Figure 4: display all tasks' log
 - [ ] restart a stopped job
 - [ ] test wrong format cron
 - [ ] test on Windows
+- [ ] startup on Windows
 - [ ] test on MacOs
 - [ ] a log for watching the whole program
 - [ ] limit log length on web interface

@@ -13,6 +13,7 @@ import (
 )
 
 // TODO: cycle job is not work on done
+// TODO: avoiding cmd windows pop up on Windows 10
 
 // Exec type for do exec
 type Exec struct {
