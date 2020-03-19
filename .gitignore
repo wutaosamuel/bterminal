@@ -1,9 +1,10 @@
 # vscode directory
 .vscode/
 
-# Debian package
-cmd/deb/bterminal-1.0-0/usr/
-cmd/deb/*.deb
+# Debian package -- FIXME: all file should be create, when create .deb package
+cmd/deb/bterminal-1.0-0/bterminal-1.0-0.deb
+cmd/deb/bterminal-1.0-0/usr/share/bterminal
+cmd/deb/bterminal-1.0-0/var/log/bterminal
 
 # Binaries for programs and plugins
 *.exe

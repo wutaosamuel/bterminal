@@ -14,8 +14,16 @@ go get github.com/wutaosamuel/bterminal/cmd/bterminal
 或者
 
 ``` sh
-# debian/utuntu
+# debian/ubuntu
 dpkg -i bterminal-1.0-1.deb
+```
+
+或者
+
+``` sh
+# windows
+# use after setup
+bterminal-1.0-1.exe
 ```
 
 ## 功能
@@ -30,7 +38,28 @@ dpkg -i bterminal-1.0-1.deb
 
 ### 运行
 
+#### 简单运行
+
+``` sh
+# Linux
+bterminal
+```
+
+``` sh
+# Windows
+1. bterminal.msi
+2. 点击右下角系统托盘中bterminal的开始选项
+```
+
+网络端口，密码和日志路径是可以用命令行命令里改变的。详情 bterminal -h | help。
+如果你的程序是由windows安装工具下载的，可以在C:/ProgramData/bterminal/config.json里改变上述三项变量。
+
 ### 使用
+
+``` sh
+# 在浏览器中管理任务
+127.0.0.1:5122
+```
 
 ## 图表
 
@@ -58,19 +87,24 @@ dpkg -i bterminal-1.0-1.deb
 
 ## TODO
 
-- [x] delete log and stop jobs
 - [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
-- [ ] recovery jobs
-  - [x] done
-  - [ ] test
-- [ ] recovery logs
-  - [x] done
-  - [ ] test
+- [ ] restart a stopped job
 - [ ] test wrong format cron
-- [ ] test on Windows, MacOs
-- [ ] make windows installer
-- [ ] deb package
+- [ ] test on Windows
+- [ ] startup on Windows
+- [ ] test on MacOs
+- [ ] a log for watching the whole program
+- [ ] limit log length on web interface
+- [x] make windows installer
+- [x] deb package
+- [ ] support go mod (currently, fail on uuid)
 - [ ] 新的网页UI或者软件UI
+
+## 库
+
+- github.com/patrickmn/go-cache
+- github.com/satori/go.uuid
+- github.com/robfig/cron
 
 ## 贡献
 

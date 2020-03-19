@@ -10,7 +10,22 @@ which provides good flexibility as result of cross-platform property(e.g. Window
 ## Installation
 
 ``` sh
-go get github.com/wutaosamuel/bterminal/cmd/bterminal
+go get -u github.com/wutaosamuel/bterminal/cmd/bterminal
+```
+
+or
+
+``` sh
+# debian/ubuntu
+dpkg -i bterminal-1.0-1.deb
+```
+
+or
+
+``` sh
+# windows, tested win10 only
+# use after setup
+bterminal-1.0-1.msi
 ```
 
 or
@@ -33,7 +48,28 @@ dpkg -i bterminal-1.0-1.deb
 
 ### Run
 
+#### Simple run
+
+``` sh
+# Linux
+bterminal
+```
+
+``` sh
+# Windows
+1. bterminal.exe
+2. click start button of bterminal on the right-bottom System tray
+```
+
+Web port, password and logs path can be changed by command. More details: bterminal -h | help.
+if program installed by windows installer, pls, change C:/ProgramData/bterminal/config.json
+
 ### Usage
+
+``` sh
+# manage jobs on web browser
+127.0.0.1:5122
+```
 
 ## Figures
 
@@ -69,21 +105,24 @@ Figure 4: display all tasks' log
 
 ## TODO
 
-- [x] delete log and stop jobs
 - [ ] -c, --clean: clean GobData.dat, html/logs.html, html/jobs.html
-- [ ] recovery jobs
-  - [x] done
-  - [ ] test
-- [ ] recovery logs
-  - [x] done
-  - [ ] test
 - [ ] restart a stopped job
 - [ ] test wrong format cron
-- [ ] test on Windows, MacOs
+- [ ] test on Windows
+- [ ] startup on Windows
+- [ ] test on MacOs
 - [ ] a log for watching the whole program
-- [ ] make windows installer
-- [ ] deb package
+- [ ] limit log length on web interface
+- [x] make windows installer
+- [x] deb package
+- [ ] support go mod (currently, fail on uuid)
 - [ ] develop new web interface or a software UI
+
+## Libraries
+
+- github.com/patrickmn/go-cache
+- github.com/satori/go.uuid
+- github.com/robfig/cron
 
 ## Contributing
 
