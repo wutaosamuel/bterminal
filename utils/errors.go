@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"errors"
 )
 
@@ -41,6 +42,7 @@ func Errs(text string, err error) error {
 // CheckPanic check err != nil panic
 func CheckPanic(err error) {
 	if err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
 }

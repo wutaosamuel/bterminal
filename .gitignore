@@ -1,8 +1,10 @@
 # vscode directory
 .vscode/
 
-# Debian package
-cmd/deb/bterminal-1.0-0/usr/
+# Debian package -- FIXME: all file should be create, when create .deb package
+cmd/deb/bterminal-1.0-0/bterminal-1.0-0.deb
+cmd/deb/bterminal-1.0-0/usr/share/bterminal
+cmd/deb/bterminal-1.0-0/var/log/bterminal
 
 # Binaries for programs and plugins
 *.exe
@@ -10,6 +12,7 @@ cmd/deb/bterminal-1.0-0/usr/
 *.dll
 *.so
 *.dylib
+*.deb
 
 # Test binary, built with `go test -c`
 *.test
@@ -26,3 +29,6 @@ log/
 # unnessery html file, automatically generate when program start
 html/jobs.html
 html/logs.html
+
+# unnessery dat
+*.dat

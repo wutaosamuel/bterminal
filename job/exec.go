@@ -7,12 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"syscall"
 
 	cron "github.com/robfig/cron"
 	uuid "github.com/satori/go.uuid"
 )
 
 // TODO: cycle job is not work on done
+// TODO: avoiding cmd windows pop up on Windows 10
 
 // Exec type for do exec
 type Exec struct {
@@ -166,6 +168,7 @@ func (e *Exec) DeleteLog() error {
 func DoExecute(logName string, command string) {
 	args := strings.Fields(strings.TrimSpace(command))
 	cmd := exec.Command(args[0], args[1:]...)
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
 
 	f, err := os.OpenFile(
@@ -183,5 +186,5 @@ func DoExecute(logName string, command string) {
 		log.Println(command)
 		log.Println("done")
 	}
-	log.Printf("The output:\n\n%s\n", out)
+	log.Printf("The output:\n\n%s\n", string(out))
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"fmt"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -45,7 +44,6 @@ func main() {
 	}
 	appPath := filepath.Dir(filepath.Dir(filepath.Dir(thisPath)))
 
-	fmt.Println(appPath)
 	// do main func
 	bt.Main(config, appPath)
 }
