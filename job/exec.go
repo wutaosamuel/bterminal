@@ -186,5 +186,5 @@ func DoExecute(logName string, command string) {
 		log.Println(command)
 		log.Println("done")
 	}
-	log.Printf("The output:\n\n%s\n", out)
+	log.Printf("The output:\n\n%s\n", string(out))
 }
