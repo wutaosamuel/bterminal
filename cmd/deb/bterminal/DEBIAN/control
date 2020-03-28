@@ -1,6 +1,6 @@
 Package:bterminal
-Version:1.0-0
-Architecture:amd64
+Version:1.0.0
+Architecture:arm
 Maintainer:wutaosamuel@gmail.com
 Section:unknown
 Priority:optional

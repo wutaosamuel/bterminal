@@ -1,7 +1,5 @@
 9efde496774fcf0e8376884120ae74e8  ./usr/local/bin/bterminal
 085d301382e7fe464984e8c9b4e0db38  ./usr/share/bterminal/.gitignore
-0ab0e13be2da4bfa0501346fca8a839b  ./usr/share/bterminal/job/log.go
-700bfee4e6cc3cbf69ff6bbdf0dbe082  ./usr/share/bterminal/job/exec_test.go
 768a17c8b1374f67283a32cfe49d8467  ./usr/share/bterminal/job/dat.go
 5c29da1e0e1d2a9130806eb4aeef14f4  ./usr/share/bterminal/job/exec.go
 ebcfeda321b1c225a43227217f86874d  ./usr/share/bterminal/html/jobs.go
