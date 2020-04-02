@@ -142,13 +142,20 @@ class python_debian_package:
     for f in sorted(
       glob.glob(os.path.join(usr, "**"), recursive=True)):
       if os.path.isfile(f):
-        with open(f, "r") as content:
-          md5 = hashlib.md5(content.encode("utf-8")).hexdigest()
+        with open(f, "rb") as content:
+          #md5 = hashlib.md5(str(content).encode("utf-8")).hexdigest()
+          file_hash = hashlib.md5()
+          while True:
+            chunk = content.read(8192)
+            if not chunk:
+              break
+            file_hash.update(chunk)
+          md5 = file_hash.hexdigest()
         # reformat: ./usr/*
-        filesplit = os.path.split(f)
+        filesplit = os.path.normpath(f).split(os.path.sep)
         isUsr = False
         filepath = "."
-        for index in len(filesplit):
+        for index in range(len(filesplit)):
           if filesplit[index] == "usr":
             isUsr = True
           if isUsr:
@@ -161,7 +168,7 @@ class python_debian_package:
     md5file = os.path.join(self.debian, "md5sums")
     md5data = []
     for line in range(len(files)):
-      md5data.append(md5s[line] + "  " + files[line])
+      md5data.append(md5s[line] + "  " + files[line] + "\n")
     with open(md5file, "w") as md5f:
       md5f.writelines(md5data)
   
@@ -175,7 +182,7 @@ class python_debian_package:
       self.md5sum()
       # build debian package
       debname = self.name+"_"+self.version+"_"+self.architecture[index]+".deb"
-      os.system("dpkg -b "+self.debian+" "+debname)
+      os.system("dpkg -b "+self.deb_dir+" "+debname)
 
   def exec_build(self):
     pass

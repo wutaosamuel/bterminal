@@ -4,6 +4,8 @@
 # Debian package -- FIXME: all file should be create, when create .deb package
 cmd/deb/bterminal/bterminal-1.0-0.deb
 cmd/deb/bterminal/usr/share/bterminal
+cmd/deb/bterminal/usr/local/bin/bterminal
+cmd/deb/bterminal/usr/local/lib
 cmd/deb/bterminal/var/log/bterminal
 
 # Binaries for programs and plugins
