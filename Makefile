@@ -10,6 +10,7 @@ BINARY_NAME=bterminal
 GOCMD=./cmd
 GOBUILDWIN=$(GOCMD)/bterminalWin
 GOBUILDLNX=$(GOCMD)/bterminal
+GOBUILDDEB=$(GOCMD)/deb
 
 all: test build
 build:
@@ -24,7 +25,7 @@ deps:
 	$(GOGET) -u 
 
 # Cross compilation
-build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME) -v $(GOBUILDLNX) 
+build-deb:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BINARY_NAME) -v $(GOBUILDDEB) 
 build-win:
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -ldflags="-H windowsgui" -o $(BINARY_NAME) -v $(GOBUILDWIN)
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD) -ldflags="-H windowsgui" -o $(BINARY_NAME).exe -v $(GOBUILDWIN)

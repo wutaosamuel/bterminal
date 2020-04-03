@@ -2,9 +2,9 @@
 .vscode/
 
 # Debian package -- FIXME: all file should be create, when create .deb package
-cmd/deb/bterminal-1.0-0/bterminal-1.0-0.deb
-cmd/deb/bterminal-1.0-0/usr/share/bterminal
-cmd/deb/bterminal-1.0-0/var/log/bterminal
+cmd/deb/bterminal_1.0.1_amd64/bterminal_1.0.1_amd64.deb
+cmd/deb/bterminal_1.0.1_amd64/usr/share/bterminal
+cmd/deb/bterminal_1.0.1_amd64/var/log/bterminal
 
 # Binaries for programs and plugins
 *.exe
