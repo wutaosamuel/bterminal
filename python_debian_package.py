@@ -18,6 +18,7 @@ class python_debian_package:
     self.debian = None
     self.name=None
     self.system = None
+    self.extra = None
     self.architecture = self.detectArch()
     self.version = "1.0.0"
     self.flag = None
@@ -41,6 +42,9 @@ class python_debian_package:
     parser.add_argument("-m", "--make",
                         help="make command for build program, Makefile required",
                         type=str, nargs="+", required=False)
+    parser.add_argument("-e", "--extra",
+                        help="extra string add on debian package name",
+                        type=str, nargs="?", required=False)
     parser.add_argument("-V", "--Version",
                         help="deb package version",
                         type=str, nargs="+", required=False)
@@ -62,6 +66,8 @@ class python_debian_package:
       self.version = args.Version
     if args.make != None:
       self.make = args.make
+    if args.extra != None:
+      self.extra = args.extra
     
     # check all parameter
     if not os.path.isdir(self.deb_dir):
@@ -181,7 +187,10 @@ class python_debian_package:
       # calculate md5sums of ./usr/*
       self.md5sum()
       # build debian package
-      debname = self.name+"_"+self.version+"_"+self.architecture[index]+".deb"
+      if self.extra != None:
+        debname = self.name+"_"+self.version+"_"+self.architecture[index]+"_"+self.extra+".deb"
+      else:
+        debname = self.name+"_"+self.version+"_"+self.architecture[index]+".deb"
       os.system("dpkg -b "+self.deb_dir+" "+debname)
 
   def exec_build(self):
