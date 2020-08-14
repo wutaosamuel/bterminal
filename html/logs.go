@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/utils"
+	"../utils"
 )
 
 // JobLog for logs html

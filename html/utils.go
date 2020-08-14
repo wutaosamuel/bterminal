@@ -9,9 +9,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/wutaosamuel/bterminal/conf"
-	"github.com/wutaosamuel/bterminal/job"
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME: 
+	// "github.com/wutaosamuel/bterminal/conf"
+	// "github.com/wutaosamuel/bterminal/job"
+	// "github.com/wutaosamuel/bterminal/utils"
+
+	"../conf"
+	"../job"
+	"../utils"
 )
 
 // ConfigHTML for HTML use

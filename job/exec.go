@@ -125,9 +125,7 @@ func (e *Exec) DoExec() {
 	}
 
 	// exec
-	e.Lock()
-	DoExecute(e.LogName, e.Command)
-	e.Unlock()
+	go DoExecute(e.LogName, e.Command)
 }
 
 // StartCron do schedule of Exec

@@ -6,7 +6,9 @@ package html
  */
 
 import (
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/utils"
+	"../utils"
 )
 
 // Detail for detail html

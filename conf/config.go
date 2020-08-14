@@ -7,7 +7,9 @@ import (
 	"net"
 	"os"
 
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/utils"
+	"../utils"
 )
 
 // Config contain settings

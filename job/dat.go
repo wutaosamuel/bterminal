@@ -4,7 +4,9 @@ import (
 	"encoding/gob"
 	"os"
 
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/utils"
+	"../utils"
 )
 
 // Dat struct store date create from program

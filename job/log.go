@@ -4,7 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/utils"
+	"../utils"
 )
 
 // LogFunction interface

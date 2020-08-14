@@ -2,14 +2,18 @@ package main
 
 import (
 	"os"
+	"fmt"
 	"path/filepath"
 	"runtime"
 	"strconv"
 
 	"github.com/spf13/pflag"
 
-	"github.com/wutaosamuel/bterminal/conf"
-	bt "github.com/wutaosamuel/bterminal"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/conf"
+	// bt "github.com/wutaosamuel/bterminal"
+	"../../conf"
+	bt "../../../bterminal"
 )
 
 func main() {
@@ -43,6 +47,8 @@ func main() {
 		panic("Set App Path fail")
 	}
 	appPath := filepath.Dir(filepath.Dir(filepath.Dir(thisPath)))
+	// FIXME: remove it
+	fmt.Println("app path: " + appPath)
 
 	// do main func
 	bt.Main(config, appPath)

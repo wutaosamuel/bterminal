@@ -7,9 +7,13 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/wutaosamuel/bterminal/conf"
-	ht "github.com/wutaosamuel/bterminal/html"
-	"github.com/wutaosamuel/bterminal/job"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/conf"
+	// ht "github.com/wutaosamuel/bterminal/html"
+	// "github.com/wutaosamuel/bterminal/job"
+	"./conf"
+	ht "./html"
+	"./job"
 )
 
 // Main func for bterminal

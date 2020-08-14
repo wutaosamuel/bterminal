@@ -10,7 +10,9 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/wutaosamuel/bterminal/utils"
+	// FIXME:
+	// "github.com/wutaosamuel/bterminal/utils"
+	"../utils"
 )
 
 // HandleShell shell.html func

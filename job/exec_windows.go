@@ -16,7 +16,8 @@ import (
 // output log
 // TODO: set default system log path
 func DoExecute(logName string, command string) {
-	args := strings.Fields(strings.TrimSpace(command))
+	commandToRun := os.ExpandEnv(command)
+	args := strings.Fields(strings.TrimSpace(commandToRun))
 	cmd := exec.Command(args[0], args[1:]...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	log.SetFlags(log.Ldate | log.Ltime | log.LUTC)
