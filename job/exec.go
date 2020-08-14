@@ -12,6 +12,7 @@ import (
 
 // TODO: cycle job is not work on done
 // TODO: avoiding cmd windows pop up on Windows 10
+// TODO: replace RWLocker to file locker
 
 // Exec type for do exec
 type Exec struct {
@@ -21,6 +22,7 @@ type Exec struct {
 	LogName string // log path/name.log
 
 	*sync.RWMutex             // Read & write lock
+	*os.File								  // File lock
 	Logger        *log.Logger // logger for exec
 
 	Cron *cron.Cron // does job need to schedule
@@ -38,6 +40,7 @@ func NewExecS() *Exec {
 		"",
 		"",
 		&sync.RWMutex{},
+		&os.File{},
 		&log.Logger{},
 		cron.New(),
 		"",
@@ -53,6 +56,7 @@ func NewExec() *Exec {
 		"",
 		"",
 		&sync.RWMutex{},
+		&os.File{},
 		&log.Logger{},
 		cron.New(),
 		""}
@@ -68,6 +72,7 @@ func RecoverDat(d Dat) map[string]Exec {
 			job.Command,
 			job.LogName,
 			&sync.RWMutex{},
+			&os.File{},
 			&log.Logger{},
 			cron.New(),
 			job.Time,
@@ -141,9 +146,7 @@ func (e *Exec) StartCron() {
 
 // StopCron to stop job
 func (e *Exec) StopCron() {
-	e.Lock()
 	e.Cron.Stop()
-	e.Unlock()
 	e.WriteLog(e.Name + " cron has stopped!")
 }
 

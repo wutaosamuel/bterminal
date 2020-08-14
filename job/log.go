@@ -32,7 +32,7 @@ func (e *Exec) WriteLog(logInfo interface{}) {
 
 // WriteLogFunc write into log by func
 func (e *Exec) WriteLogFunc(logFunc LogActCallback) {
-	e.Lock()
+	// TODO: file lock
 	// open log file
 	f, err := os.OpenFile(
 		e.LogName,
@@ -44,13 +44,12 @@ func (e *Exec) WriteLogFunc(logFunc LogActCallback) {
 	defer f.Close()
 	e.Logger = log.New(f, "", log.Ldate|log.Ltime|log.LUTC)
 	logFunc(e.Logger)
-	e.Unlock()
 	return
 }
 
 // ReadLog read log
 func (e *Exec) ReadLog() (string, error) {
-	e.RLock()
+	// TODO: file lock
 	// avoiding if log is not exist
 	isFile, err := utils.IsFile(e.LogName)
 	if err != nil {
@@ -60,6 +59,5 @@ func (e *Exec) ReadLog() (string, error) {
 		return "", nil
 	}
 	str, err := utils.ReadLog(e.LogName)
-	e.RUnlock()
 	return str, err
 }
