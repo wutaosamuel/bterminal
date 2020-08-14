@@ -13,8 +13,8 @@ import (
 	"strings"
 
 	// FIXME:
-	// "github.com/wutaosamuel/bterminal/utils"
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
+	// "../utils"
 )
 
 // JobLog for logs html

@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 
 	// FIXME:
-	// "github.com/wutaosamuel/bterminal/utils"
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
+	// "../utils"
 )
 
 // HandleShell shell.html func

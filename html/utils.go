@@ -10,13 +10,13 @@ import (
 	"time"
 
 	// FIXME: 
-	// "github.com/wutaosamuel/bterminal/conf"
-	// "github.com/wutaosamuel/bterminal/job"
-	// "github.com/wutaosamuel/bterminal/utils"
+	"github.com/wutaosamuel/bterminal/conf"
+	"github.com/wutaosamuel/bterminal/job"
+	"github.com/wutaosamuel/bterminal/utils"
 
-	"../conf"
-	"../job"
-	"../utils"
+	// "../conf"
+	// "../job"
+	// "../utils"
 )
 
 // ConfigHTML for HTML use

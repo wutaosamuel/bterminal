@@ -8,12 +8,12 @@ import (
 	"time"
 
 	// FIXME:
-	// "github.com/wutaosamuel/bterminal/conf"
-	// ht "github.com/wutaosamuel/bterminal/html"
-	// "github.com/wutaosamuel/bterminal/job"
-	"./conf"
-	ht "./html"
-	"./job"
+	"github.com/wutaosamuel/bterminal/conf"
+	ht "github.com/wutaosamuel/bterminal/html"
+	"github.com/wutaosamuel/bterminal/job"
+	// "./conf"
+	// ht "./html"
+	// "./job"
 )
 
 // Main func for bterminal

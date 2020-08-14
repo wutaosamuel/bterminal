@@ -7,8 +7,8 @@ package html
 
 import (
 	// FIXME:
-	// "github.com/wutaosamuel/bterminal/utils"
-	"../utils"
+	"github.com/wutaosamuel/bterminal/utils"
+	// "../utils"
 )
 
 // Detail for detail html

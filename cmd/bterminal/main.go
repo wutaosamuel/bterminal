@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/pflag"
 
 	// FIXME:
-	// "github.com/wutaosamuel/bterminal/conf"
-	// bt "github.com/wutaosamuel/bterminal"
-	"../../conf"
-	bt "../../../bterminal"
+	"github.com/wutaosamuel/bterminal/conf"
+	bt "github.com/wutaosamuel/bterminal"
+	// "../../conf"
+	// bt "../../../bterminal"
 )
 
 func main() {
